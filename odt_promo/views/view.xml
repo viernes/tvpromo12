@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+    <data>
+      <record id="inherit_fields_form" model="ir.ui.view">
+        <field name="name">inherit.fields.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='tag_ids']" position="after">
+            <field name="marca"/>
+            <field name="target"/>
+          </xpath>
+        </field>
+      </record>
+      <record id="inherit_name_page" model="ir.ui.view">
+        <field name="name">inherit.name.page</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form[1]/sheet[1]/notebook[1]//page[1]" position="attributes">
+            <attribute name="string">Mecanica</attribute>
+          </xpath>
+        </field>
+      </record>
+      <record id="inherit_page" model="ir.ui.view">
+        <field name="name">inherit.page</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+            <page name="brief" string="Brief">
+                <group name="group">
+                    <group name="group_left">
+                        <group name="brief_">
+                          <field name="product"/>
+                          <field name="project"/>
+                          <field name="term_promo_date"/>
+                          <field name="temporalidad"/>
+                          <field name="slogan_marca"/>
+                          <field name="logo_marca"/>
+                        </group>
+                        <group string="Reto del Proyecto">
+                        </group>
+                        <group string="Objetivo del Negocio">
+                        </group>
+                        <group string="Objetivo de la Marca">
+                        </group>
+                        <group string="Caracter de la Marca">
+                        </group>
+                    </group>
+                    <group name="group_right">
+                        <group string="Quienes son los competidores?">
+                        </group>
+                        <group string="A quienes les vamos a hablar?">
+                        </group>
+                        <group string="Que debemos comunicar?">
+                        </group>
+                        <group string="Que no queremos comunicar?">
+                        </group>  
+                    </group>
+              </group>
+            </page>
+          </xpath>
+        </field>
+      </record>
+    </data>
+  </odoo>
