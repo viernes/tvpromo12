@@ -7,6 +7,7 @@ class crmlead(models.Model):
 	"""docstring for crmlead"""
 	_inherit = 'crm.lead'
 
+	odt_count = fields.Integer()
 	marca = fields.Many2one('crm_marca', string='Marca')
 	target = fields.Char(string='Target')
 	product = fields.Char(string='Producto')

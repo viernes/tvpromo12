@@ -22,6 +22,32 @@
           </xpath>
         </field>
       </record>
+      <record id="inherit_invisible_field" model="ir.ui.view">
+        <field name="name">inherit.invisible.field</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form[1]/sheet[1]//h2[1]" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+        </field>
+      </record>
+      <record id="inherit_button_box" model="ir.ui.view">
+        <field name="name">inherit.button.box</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form[1]/sheet[1]//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" context="{'partner_id': partner_id}" icon="fa-edit">
+                  <div class="o_stat_info">
+                      <field name="odt_count" class="o_stat_value"/>
+                        <span class="o_stat_text" attrs="{'invisible': [('odt_count', '&lt;', 2)]}"> ODTS</span>
+                        <span class="o_stat_text" attrs="{'invisible': [('odt_count', '&gt;', 1)]}"> ODT</span>
+                 </div>
+               </button>
+          </xpath>
+        </field>
+      </record>
       <record id="inherit_page" model="ir.ui.view">
         <field name="name">inherit.page</field>
         <field name="model">crm.lead</field>
@@ -29,63 +55,62 @@
         <field name="arch" type="xml">
           <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
             <page name="brief" string="Brief">
-                <group name="group">
                     <group name="group_left">
-                        <group name="brief">
-                          <field name="product"/>
-                          <field name="project"/>
-                          <field name="term_promo_date"/>
-                          <field name="temporalidad"/>
-                          <field name="slogan_marca"/>
-                          <field name="logo_marca"/>
-                        </group>
-                        <group name="reto_proyecto" string="Reto del Proyecto">
-                          <field name="rp_1" />
-                          <field name="rp_2" />
-                          <field name="rp_3" />
-                          <field name="rp_4" />
-                        </group>
-                        <group name="objetivo_negocio" string="Objetivo del Negocio">
-                          <field name="on_1" />
-                          <field name="on_2" />
-                          <field name="on_3" />
-                          <field name="on_4" />
-                        </group>
-                        <group name="objetivo_marca"  string="Objetivo de la Marca">
-                          <field name="ob_1" />
-                          <field name="ob_2" />
-                          <field name="ob_3" />
-                        </group>
-                        <group name="caracter_marca" string="Caracter de la Marca">
-                          <field name="cm_1" />
-                          <field name="cm_2" />
-                          <field name="cm_3" />
-                          <field name="cm_4" />
-                        </group>
-                    </group>
-                    <group name="group_right">
-                        <group name="competidores">
-                          <field name="qcs_1"/>
-                          <field name="qcs_2"/>
-                          <field name="qcs_3"/>
-                        </group>
-                        <group name="dialogo">
-                          <field name="vh_1"/>
-                          <field name="vh_2"/>
-                          <field name="vh_3"/>
-                        </group>
-                        <group name="comunicar">
-                          <field name="dc_1"/>
-                          <field name="dc_2"/>
-                          <field name="dc_3"/>
-                        </group>
-                        <group name="no_comunicar?">
-                          <field name="qc_1"/>
-                          <field name="qc_2"/>
+                          <group name="brief">
+                              <field name="product"/>
+                              <field name="project"/>
+                              <field name="term_promo_date"/>
+                              <field name="temporalidad"/>
+                              <field name="slogan_marca"/>
+                              <field name="logo_marca"/>
+                          </group>
 
-                        </group>  
+                          <group name="reto_proyecto" string="Reto del Proyecto">
+                              <field name="rp_1" />
+                              <field name="rp_2" />
+                              <field name="rp_3" />
+                              <field name="rp_4" />
+                          </group>
+                          <group name="objetivo_negocio" string="Objetivo del Negocio">
+                              <field name="on_1" />
+                              <field name="on_2" />
+                              <field name="on_3" />
+                              <field name="on_4" />
+                          </group>
+                          <group name="objetivo_marca"  string="Objetivo de la Marca">
+                              <field name="ob_1" />
+                              <field name="ob_2" />
+                              <field name="ob_3" />
+                          </group>
+                          <group name="caracter_marca" string="Caracter de la Marca">
+                              <field name="cm_1" />
+                              <field name="cm_2" />
+                              <field name="cm_3" />
+                              <field name="cm_4" />
+                          </group>
                     </group>
-              </group>
+
+                    <group name="group_right">
+                          <group name="competidores">
+                              <field name="qcs_1"/>
+                              <field name="qcs_2"/>
+                              <field name="qcs_3"/>
+                          </group>
+                          <group name="dialogo">
+                              <field name="vh_1"/>
+                              <field name="vh_2"/>
+                              <field name="vh_3"/>
+                          </group>
+                          <group name="comunicar">
+                              <field name="dc_1"/>
+                              <field name="dc_2"/>
+                              <field name="dc_3"/>
+                          </group>
+                          <group name="no_comunicar?">
+                              <field name="qc_1"/>
+                              <field name="qc_2"/>
+                          </group>  
+                    </group>
             </page>
           </xpath>
         </field>
