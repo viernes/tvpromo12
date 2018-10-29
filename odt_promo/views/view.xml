@@ -64,24 +64,24 @@
                         </group>
                     </group>
                     <group name="group_right">
-                        <group name="competidores">¿Quiénes son los competidores?
-                          <field name="5q_1"/>
-                          <field name="5q_2"/>
-                          <field name="5q_3"/>
+                        <group name="competidores">
+                          <field name="qcs_1"/>
+                          <field name="qcs_2"/>
+                          <field name="qcs_3"/>
                         </group>
                         <group name="dialogo">
-                          <field name="6vh_1"/>
-                          <field name="6vh_2"/>
-                          <field name="6vh_3"/>
+                          <field name="vh_1"/>
+                          <field name="vh_2"/>
+                          <field name="vh_3"/>
                         </group>
                         <group name="comunicar">
-                          <field name="7dc_1"/>
-                          <field name="7dc_2"/>
-                          <field name="7dc_3"/>
+                          <field name="dc_1"/>
+                          <field name="dc_2"/>
+                          <field name="dc_3"/>
                         </group>
                         <group name="no_comunicar?">
-                          <field name="8qc_1"/>
-                          <field name="8qc_2"/>
+                          <field name="qc_1"/>
+                          <field name="qc_2"/>
 
                         </group>  
                     </group>
