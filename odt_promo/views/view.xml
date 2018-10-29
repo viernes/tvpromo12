@@ -69,14 +69,20 @@
                           <field name="5q_2"/>
                           <field name="5q_3"/>
                         </group>
-                        <group string="A quienes les vamos a hablar?">
+                        <group name="dialogo">
                           <field name="6vh_1"/>
                           <field name="6vh_2"/>
                           <field name="6vh_3"/>
                         </group>
-                        <group string="Que debemos comunicar?">
+                        <group name="comunicar">
+                          <field name="7dc_1"/>
+                          <field name="7dc_2"/>
+                          <field name="7dc_3"/>
                         </group>
-                        <group string="Que no queremos comunicar?">
+                        <group name="no_comunicar?">
+                          <field name="8qc_1"/>
+                          <field name="8qc_2"/>
+
                         </group>  
                     </group>
               </group>

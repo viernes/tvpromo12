@@ -30,9 +30,20 @@ class crmlead(models.Model):
 	ob_2 = fields.Char(string='¿Posicionamiento?')
 	ob_3 = fields.Char(string='¿Diferenciacion?')
 	cm_1 = fields.Char(string='¿Como se define y posiciona la marca en cuanto a si misma?')
-	cm_2 = fields.Char(string='¿Que linea de comunicacion esta implementando la marca actualmente?')
+	cm_2 = fields.Char(string='¿Que linea de comunicación esta implementando la marca actualmente?')
 	cm_3 = fields.Char(string='¿Descripcion de la marca (Joven, solida, dinamica, innovadora, flexible, segura, institucional, preocupada por el consumidor)?')
 	cm_4 = fields.Char(string='¿Que tono se debe adoptar?')
+	5q_1 = fields.Char(string='¿Quiénes son loc competidores?')
+	5q_2 = fields.Char(string='¿En qué se diferencia la marca ante la competencia (beneficios al consumidor)?')
+	5q_3 = fields.Char(string='¿Qué piensan y sienten los consumidores acerca de la competencia?')
+	6vh_1 = fields.Char(string='¿NSE, TARGET?')
+	6vh_2 = fields.Char(string='¿Cuál es el comportamiengo habitual?')
+	6vh_3 = fields.Char(string='¿Qué piensan y sienten acerca de la marca?')
+	7dc_1 = fields.Char(string='7. ¿QUÉ DEBEMOS COMUNICAR?')
+	7dc_2 = fields.Char(string='¿Qué queremos que piensen y sientan de la marca?')
+	7dc_3 = fields.Char(string='¿Qué queremos que se sepa y sienta la gente sobre esta comunicación?')
+	8qc_1 = fields.Char(string='8. ¿QUÉ NO QUEREMOS COMUNICAR?')
+	8qc_2 = fields.Char(string='¿CÓMO SE COMPORTA EL CONSUMIDOR RESPECTO AL PRODUCTO O SERVICIO ACTUALMENTE (CONDUCTAS Y CARENCIAS)?')
 
 class marca_crm(models.Model):
 	"""docstring for marca_crm"""
