@@ -75,7 +75,7 @@ class expensesfields(models.Model):
 	_inherit = 'hr.expense.sheet'
 
 	delivery_amount = fields.Monetary(string='Cantidad de Entrega')
-	prove_amount = fields.Monetary(string='Cantidad Comprobada', compute='_compute_amount_comprobado')
+	prove_amount = fields.Monetary(string='Cantidad Comprobada')
 	returned = fields.Monetary(string='Devuelto')
 	diferencia = fields.Monetary(string='Diferencia')
 	approved = fields.Boolean(string='Aprovado')
