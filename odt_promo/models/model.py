@@ -44,7 +44,18 @@ class crmlead(models.Model):
 	dc_2 = fields.Char(string='¿Qué queremos que piensen y sientan de la marca?')
 	dc_3 = fields.Char(string='¿Qué queremos que se sepa y sienta la gente sobre esta comunicación?')
 	qc_1 = fields.Char(string='8. ¿QUÉ NO QUEREMOS COMUNICAR?')
-	qc_2 = fields.Char(string='¿CÓMO SE COMPORTA EL CONSUMIDOR RESPECTO AL PRODUCTO O SERVICIO ACTUALMENTE (CONDUCTAS Y CARENCIAS)?')
+	qc_2 = fields.Char(string='9. ¿CÓMO SE COMPORTA EL CONSUMIDOR RESPECTO AL PRODUCTO O SERVICIO ACTUALMENTE (CONDUCTAS Y CARENCIAS)?')
+	ccp_1 = fields.Char(string='10. ¿QUÉ OTRAS PROMOCIONES HA TENIDO LA MARCA?')
+	ccp_2 = fields.Char(string='¿Qué resultados obtuvieron?')
+	cdp_1 = fields.Char(string='¿Qué medios se utilizarán para la implementación?')
+	cdp_2 = fields.Char(string='¿Qué medios se utilizarán para la difusión?')
+	cdp_3 = fields.Char(string='¿Qué medios se utilizarán para la participación?')
+	qz_12 = fields.Char(string='¿CUÁL ES EL MARCO LEGAL?(RTC, SEGOB, PROFECO, MICROSITIOS Y PROMOWEB)')
+	qz_13 = fields.Char(string='¿HAY REQUERIMIENTO ADICIONALES? /n Medios de datos y consideraciones creativas, mandatorios con respecto al uso de la marca, aspectos legales, manejo de los modulos,etc')
+	qz_14 = fields.Char(string='¿HAY UN ESTIMADO DE PRESUPUESTO?')
+	qz_15 = fields.Char(string='¿CUÁLES SON LOS ENTREGABLES?')
+	qz_16 = fields.Char(string='¿SE TRABAJARA EN CONJUNCO CON ALGUNA AGENCIA DE LA MARCA?')
+
 
 class marca_crm(models.Model):
 	"""docstring for marca_crm"""
@@ -52,3 +63,29 @@ class marca_crm(models.Model):
 	_description = 'Informacion acerca de las marcas o empresas'
 
 	name = fields.Char(string='Nombre')
+
+class policysli(models.Model):
+
+	_inherit = 'helpdesk.sla'
+
+	time_minutes = fields.Integer(help='En este campo podras ingresar los minutos asignados al ticket')
+
+class expensesfields(models.Model):
+
+	_inherit = 'hr.expense.sheet'
+
+	delivery_amount = fields.Monetary(string='Cantidad de Entrega')
+	prove_amount = fields.Monetary(string='Cantidad Comprobada', compute='_compute_amount_comprobado')
+	returned = fields.Monetary(string='Devuelto')
+	diferencia = fields.Monetary(string='Diferencia')
+	approved = fields.Boolean(string='Aprovado')
+
+
+
+	
+class inventory(models.Model):
+
+	_inherit = 'stock.picking'
+
+	return_reason = fields.Char(string='Motivo de la Devolucion')
+	receive = fields.Char(string='Quien recibe')

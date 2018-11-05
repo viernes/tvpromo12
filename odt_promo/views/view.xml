@@ -55,7 +55,8 @@
         <field name="arch" type="xml">
           <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
             <page name="brief" string="Brief">
-                    <group name="group_left">
+              <group>
+              <group name="left">
                           <group name="brief">
                               <field name="product"/>
                               <field name="project"/>
@@ -88,9 +89,8 @@
                               <field name="cm_3" />
                               <field name="cm_4" />
                           </group>
-                    </group>
-
-                    <group name="group_right">
+                      </group>
+                      <group name="right">
                           <group name="competidores">
                               <field name="qcs_1"/>
                               <field name="qcs_2"/>
@@ -110,10 +110,81 @@
                               <field name="qc_1"/>
                               <field name="qc_2"/>
                           </group>  
-                    </group>
+                          <group name="ccp">
+                            <field name="ccp_1"/>
+                            <field name="ccp_2"/>
+                          </group>
+                          <group name="quiz_11" string="¿CÓMO Y DÓNDEVAMOS A COMUNICAR EL PROYECTO?">
+                            <field name="cdp_1"/>
+                            <field name="cdp_2"/>
+                            <field name="cdp_3"/>
+                          </group>
+                          <group name="quiz_12">
+                             <fields name="qz_12"/>
+                             <field name="qz_13"/>
+                             <field name="qz_14"/>
+                             <field name="qz_15"/>
+                             <field name="qz_16"/>
+                          </group>
+                  </group>
+                </group>
             </page>
           </xpath>
         </field>
       </record>
+      <!-- Agrega campo minutos al helpdesk en sla, nota* eliminar los nombres de campos en vista -->
+      <record id="inherit_field" model="ir.ui.view">
+              <field name="name">inherit.field</field>
+              <field name="model">helpdesk.sla</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='time_hours']" position="after">
+                  <field name="time_minutes" class="oe_inline"/> minutes<br/>
+                </xpath>
+              </field>
+      </record>
+      <record id="inherit_invisible_field" model="ir.ui.view">
+              <field name="name">inherit.invisible.field</field>
+              <field name="model">helpdesk.sla</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='time_hours']" position="attributes">
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='time_days']" position="attributes">
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+              </field>
+      </record>
+      <record id="inherit_field" model="ir.ui.view">
+              <field name="name">inherit.field</field>
+              <field name="model">hr.expense.sheet</field>
+              <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]/group[1]" position="inside">
+                  <group>
+                    <field name="delivery_amount" />
+                    <field name="prove_amount" />
+                    <field name="returned" />
+                    <field name="diferencia" />
+                  </group>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="approved" />
+                </xpath>
+              </field>
+      </record>
+      <record id="inherit_inventary_field" model="ir.ui.view">
+              <field name="name">inherit.inventary.field</field>
+              <field name="model">stock.picking</field>
+              <field name="inherit_id" ref="stock.view_picking_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                  <field name="return_reason" attrs="{'invisible': [('scheduled_date','=',False)]}"/>
+                  <field name="receive" attrs="{'invisible': [('scheduled_date','=',False)]}"/>
+                </xpath>
+              </field>
+      </record>
     </data>
   </odoo>
+

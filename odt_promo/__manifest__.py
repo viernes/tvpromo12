@@ -7,7 +7,8 @@
     'author': 'xmarts',
     'website': 'www.xmarts.com',
     'depends': ['base', 'contacts','hr','sale','crm'],
-    'data': ['views/view.xml'
+    'data': ['views/view.xml',
+             'reports/deliver_split.xml'
             ],
 
     'installable': True,
