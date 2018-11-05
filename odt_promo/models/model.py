@@ -82,7 +82,7 @@ class expensesfields(models.Model):
 
 	@api.depends('prove_amount','returned','diferencia','delivery_amount')
 	def _total_mejoras(self):
-	    self.diferencia = (float(self.delivery_amount)) - ((float(self.prove_amount)) - (float(self.returned)))
+	    self.diferencia = (float(self.delivery_amount)) - (float(self.prove_amount)) - (float(self.returned))
 
 	
 class inventory(models.Model):
