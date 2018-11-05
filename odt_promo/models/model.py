@@ -75,12 +75,14 @@ class expensesfields(models.Model):
 	_inherit = 'hr.expense.sheet'
 
 	delivery_amount = fields.Monetary(string='Cantidad de Entrega')
-	prove_amount = fields.Monetary(string='Cantidad Comprobada')
+	prove_amount = fields.Monetary(related='total_amount', string='Cantidad Comprobada')
 	returned = fields.Monetary(string='Devuelto')
-	diferencia = fields.Monetary(string='Diferencia')
+	diferencia = fields.Monetary(string='Diferencia', compute="_total_mejoras")
 	approved = fields.Boolean(string='Aprovado')
 
-
+	@api.depends('prove_amount','returned','diferencia','delivery_amount')
+	def _total_mejoras(self):
+	    self.diferencia = (float(self.delivery_amount)) - ((float(self.prove_amount)) - (float(self.returned)))
 
 	
 class inventory(models.Model):
