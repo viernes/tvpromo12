@@ -132,27 +132,19 @@
           </xpath>
         </field>
       </record>
+
       <!-- Agrega campo minutos al helpdesk en sla, nota* eliminar los nombres de campos en vista -->
-      <record id="inherit_field" model="ir.ui.view">
-              <field name="name">inherit.field</field>
-              <field name="model">helpdesk.sla</field>
-              <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
-              <field name="arch" type="xml">
-                <xpath expr="//field[@name='time_hours']" position="after">
-                  <field name="time_minutes" class="oe_inline"/> minutes<br/>
-                </xpath>
-              </field>
-      </record>
+
       <record id="inherit_invisible_field" model="ir.ui.view">
               <field name="name">inherit.invisible.field</field>
               <field name="model">helpdesk.sla</field>
               <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
               <field name="arch" type="xml">
-                <xpath expr="//field[@name='time_hours']" position="attributes">
-                  <attribute name="invisible">1</attribute>
-                </xpath>
                 <xpath expr="//field[@name='time_days']" position="attributes">
                   <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='time_hours']" position="after">
+                  <field name="time_minutes" class="oe_inline"/> minutes<br/>
                 </xpath>
               </field>
       </record>
@@ -187,4 +179,3 @@
       </record>
     </data>
   </odoo>
-

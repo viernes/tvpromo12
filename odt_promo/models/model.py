@@ -17,6 +17,7 @@ class crmlead(models.Model):
 	slogan_marca = fields.Char(string='Eslogan')
 	logo_marca = fields.Binary(string='Logo')
 
+
 	""" Quiz Fields """
 
 	rp_1 = fields.Char(string='¿Para que estamos haciendo este proyecto y cual es el reto?')
@@ -57,6 +58,7 @@ class crmlead(models.Model):
 	qz_16 = fields.Char(string='¿SE TRABAJARA EN CONJUNCO CON ALGUNA AGENCIA DE LA MARCA?')
 
 
+
 class marca_crm(models.Model):
 	"""docstring for marca_crm"""
 	_name = 'crm_marca'
@@ -91,3 +93,4 @@ class inventory(models.Model):
 
 	return_reason = fields.Char(string='Motivo de la Devolucion')
 	receive = fields.Char(string='Quien recibe')
+
