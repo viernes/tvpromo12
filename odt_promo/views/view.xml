@@ -32,22 +32,36 @@
           </xpath>
         </field>
       </record>
+
+
+<!-- Contador para el stat button start-->    
+ <record id="action_odt_crm" model="ir.actions.act_window">
+            <field name="name">ODT</field>
+            <field name="res_model">odt.crm</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="domain">[('crm_odt_id', '=', active_id)]</field>
+            <field name="context">{'search_default_crm_odt_id': active_id, 'default_crm_odt_id': active_id}</field>
+            <field name="help" type="html">
+                <p>
+                    Odoo work orders management allows you to manage the pipeline of your tasks efficiently. You can track progress, discuss on tasks, attach documents, etc.
+                </p>
+            </field>
+        </record>
+      
       <record id="inherit_button_box" model="ir.ui.view">
         <field name="name">inherit.button.box</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
-          <xpath expr="//form[1]/sheet[1]//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button" type="object" context="{'partner_id': partner_id}" icon="fa-list" name="">
-                  <div class="o_stat_info">
-                      <field name="odt_count" class="o_stat_value"/>
-                        <span class="o_stat_text" attrs="{'invisible': [('odt_count', '&lt;', 2)]}"> ODTS</span>
-                        <span class="o_stat_text" attrs="{'invisible': [('odt_count', '&gt;', 1)]}"> ODT</span>
-                 </div>
+          <xpath expr="//div[@class='oe_button_box']" position="inside">
+                <button class="oe_stat_button" icon="fa-list" name="%(action_odt_crm)d" type="action">
+                      <field name="odt_count" widget="statinfo" string="ODT"/>
                </button>
           </xpath>
         </field>
       </record>
+<!-- Contador para el stat button end-->
+      
       <record id="inherit_page" model="ir.ui.view">
         <field name="name">inherit.page</field>
         <field name="model">crm.lead</field>
@@ -55,7 +69,6 @@
         <field name="arch" type="xml">
           <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
             <page name="brief" string="Brief">
-              <group>
               <group name="left">
                           <group name="brief">
                               <field name="product"/>
@@ -127,7 +140,6 @@
                              <field name="qz_16"/>
                           </group>
                   </group>
-                </group>
             </page>
           </xpath>
         </field>

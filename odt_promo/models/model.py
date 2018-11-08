@@ -7,7 +7,6 @@ class crmlead(models.Model):
 	"""docstring for crmlead"""
 	_inherit = 'crm.lead'
 
-	odt_count = fields.Integer()
 	marca = fields.Many2one('crm_marca', string='Marca')
 	target = fields.Char(string='Target')
 	product = fields.Char(string='Producto')
@@ -16,7 +15,13 @@ class crmlead(models.Model):
 	temporalidad = fields.Char(string='Temporalidad')
 	slogan_marca = fields.Char(string='Eslogan')
 	logo_marca = fields.Binary(string='Logo')
+	odt_count = fields.Integer(string='lead', compute='_compute_odt_count')
 
+
+	@api.multi
+	def _compute_odt_count(self):
+		count = self.env['odt.crm']
+		self.odt_count = count.search_count([('crm_odt_id', 'in', [a.id for a in self])])
 
 	""" Quiz Fields """
 
@@ -56,6 +61,14 @@ class crmlead(models.Model):
 	qz_14 = fields.Char(string='¿HAY UN ESTIMADO DE PRESUPUESTO?')
 	qz_15 = fields.Char(string='¿CUÁLES SON LOS ENTREGABLES?')
 	qz_16 = fields.Char(string='¿SE TRABAJARA EN CONJUNCO CON ALGUNA AGENCIA DE LA MARCA?')
+
+class odt(models.Model):
+
+	_name = 'odt.crm'
+	_description = 'Vista Kanban para visualizar informacion de crm en solo lectura'
+
+	name = fields.Char(string='Nombre')
+	crm_odt_id = fields.Many2one('crm.lead', 'Opportunity')
 
 
 
