@@ -78,7 +78,7 @@ class odt(models.Model):
 		return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
 	crm_odt_id = fields.Many2one('crm.lead', 'Opportunity')
-	name = fields.Char(related='crm_odt_id.name',string='Nombre')
+	name = fields.Char(string='Nombre')
 	tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id',related='crm_odt_id.tag_ids', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
 	stage_id = fields.Many2one('crm.stage', string='Stage', ondelete='restrict', track_visibility='onchange', index=True,
 		domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]",
@@ -124,39 +124,67 @@ class odt(models.Model):
 	marca = fields.Many2one('crm_marca', related='crm_odt_id.marca',string='Marca')
 	target = fields.Char(string='Target')
 	area = fields.Selection([('1','BTL')], 'Area')
+	status = fields.Selection([('1','Solicitado'),('2','Cotizado'),('3','Aceptado')])
+	rp_1 = fields.Char(related='crm_odt_id.rp_1',string='¿Para que estamos haciendo este proyecto y cual es el reto?')
+	rp_2 = fields.Char(related='crm_odt_id.rp_2',string='¿Que queremos que se sepa y sienta la gente sobre el proeycto?')
+	rp_3 = fields.Char(related='crm_odt_id.rp_3',string='¿Que buscamos lograr?')
+	rp_4 = fields.Char(related='crm_odt_id.rp_4',string='¿Cual es el problema a resolver?')
+	on_1 = fields.Char(related='crm_odt_id.on_1',string='¿Crecimiento?')
+	on_2 = fields.Char(related='crm_odt_id.on_2',string='¿Mayor margen de utilidad?')
+	on_3 = fields.Char(related='crm_odt_id.on_3',string='¿Posicionamiento de un nuevo producto o servicio?')
+	on_4 = fields.Char(related='crm_odt_id.on_4',string='¿Hacer frente a la competencia?')
+	ob_1 = fields.Char(related='crm_odt_id.ob_1',string='¿Conocimiento?')
+	ob_2 = fields.Char(related='crm_odt_id.ob_2',string='¿Posicionamiento?')
+	ob_3 = fields.Char(related='crm_odt_id.ob_3',string='¿Diferenciacion?')
+	cm_1 = fields.Char(related='crm_odt_id.cm_1',string='¿Como se define y posiciona la marca en cuanto a si misma?')
+	cm_2 = fields.Char(related='crm_odt_id.cm_2',string='¿Que linea de comunicación esta implementando la marca actualmente?')
+	cm_3 = fields.Char(related='crm_odt_id.cm_3',string='¿Descripcion de la marca (Joven, solida, dinamica, innovadora, flexible, segura, institucional, preocupada por el consumidor)?')
+	cm_4 = fields.Char(related='crm_odt_id.cm_4',string='¿Que tono se debe adoptar?')
+	qcs_1 = fields.Char(related='crm_odt_id.qcs_1',string='¿Quiénes son los competidores?')
+	qcs_2 = fields.Char(related='crm_odt_id.qcs_2',string='¿En qué se diferencia la marca ante la competencia (beneficios al consumidor)?')
+	qcs_3 = fields.Char(related='crm_odt_id.qcs_3',string='¿Qué piensan y sienten los consumidores acerca de la competencia?')
+	vh_1 = fields.Char(related='crm_odt_id.vh_1',string='¿NSE, TARGET?')
+	vh_2 = fields.Char(related='crm_odt_id.vh_2',string='¿Cuál es el comportamiengo habitual?')
+	vh_3 = fields.Char(related='crm_odt_id.vh_3',string='¿Qué piensan y sienten acerca de la marca?')
+	dc_1 = fields.Char(related='crm_odt_id.dc_1',string='7. ¿QUÉ DEBEMOS COMUNICAR?')
+	dc_2 = fields.Char(related='crm_odt_id.dc_2',string='¿Qué queremos que piensen y sientan de la marca?')
+	dc_3 = fields.Char(related='crm_odt_id.dc_3',string='¿Qué queremos que se sepa y sienta la gente sobre esta comunicación?')
+	qc_1 = fields.Char(related='crm_odt_id.qc_1',string='8. ¿QUÉ NO QUEREMOS COMUNICAR?')
+	qc_2 = fields.Char(related='crm_odt_id.qc_2',string='9. ¿CÓMO SE COMPORTA EL CONSUMIDOR RESPECTO AL PRODUCTO O SERVICIO ACTUALMENTE (CONDUCTAS Y CARENCIAS)?')
+	ccp_1 = fields.Char(related='crm_odt_id.ccp_1',string='10. ¿QUÉ OTRAS PROMOCIONES HA TENIDO LA MARCA?')
+	ccp_2 = fields.Char(related='crm_odt_id.ccp_2',string='¿Qué resultados obtuvieron?')
+	cdp_1 = fields.Char(related='crm_odt_id.cdp_1',string='¿Qué medios se utilizarán para la implementación?')
+	cdp_2 = fields.Char(related='crm_odt_id.cdp_2',string='¿Qué medios se utilizarán para la difusión?')
+	cdp_3 = fields.Char(related='crm_odt_id.cdp_3',string='¿Qué medios se utilizarán para la participación?')
+	qz_12 = fields.Char(related='crm_odt_id.qz_12',string='¿CUÁL ES EL MARCO LEGAL?(RTC, SEGOB, PROFECO, MICROSITIOS Y PROMOWEB)')
+	qz_13 = fields.Char(related='crm_odt_id.qz_13',string='¿HAY REQUERIMIENTO ADICIONALES? /n Medios de datos y consideraciones creativas, mandatorios con respecto al uso de la marca, aspectos legales, manejo de los modulos,etc')
+	qz_14 = fields.Char(related='crm_odt_id.qz_14',string='¿HAY UN ESTIMADO DE PRESUPUESTO?')
+	qz_15 = fields.Char(related='crm_odt_id.qz_15',string='¿CUÁLES SON LOS ENTREGABLES?')
+	qz_16 = fields.Char(related='crm_odt_id.qz_16',string='¿SE TRABAJARA EN CONJUNCO CON ALGUNA AGENCIA DE LA MARCA?')
+	product = fields.Char(related='crm_odt_id.product',string='Producto')
+	project = fields.Many2one('project.project',related='crm_odt_id.project',string='Proyecto')
+	term_promo_date = fields.Date(related='crm_odt_id.term_promo_date',string='Vigencia de la promocion')
+	temporalidad = fields.Char(related='crm_odt_id.temporalidad',string='Temporalidad')
+	slogan_marca = fields.Char(related='crm_odt_id.slogan_marca',string='Eslogan')
+	logo_marca = fields.Binary(related='crm_odt_id.logo_marca',string='Logo')
+	coverage = fields.Char(string='Cobertura')
+	promo_type = fields.Char(string='Tipo de Promocion')
+	no_raffle = fields.Integer(string='No. Sorteos')
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	@api.model
-	def _onchange_user_values(self, user_id):
-		""" returns new values when user_id has changed """
-		if not user_id:
-			return {}
-		if user_id and self._context.get('team_id'):
-			team = self.env['crm.team'].browse(self._context['team_id'])
-			if user_id in team.member_ids.ids:
-				return {}
-		team_id = self.env['crm.team']._get_default_team_id(user_id=user_id)
-		return {'team_id': team_id}
+	# @api.model
+	# def _onchange_user_values(self, user_id):
+	# 	""" returns new values when user_id has changed """
+	# 	if not user_id:
+	# 		return {}
+	# 	if user_id and self._context.get('team_id'):
+	# 		team = self.env['crm.team'].browse(self._context['team_id'])
+	# 		if user_id in team.member_ids.ids:
+	# 			return {}
+	# 	team_id = self.env['crm.team']._get_default_team_id(user_id=user_id)
+	# 	return {'team_id': team_id}
 
 	@api.model
 	def _read_group_stage_ids(self, stages, domain, order):
@@ -174,18 +202,18 @@ class odt(models.Model):
 		stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
 		return stages.browse(stage_ids)
 
-	@api.multi
-	def _compute_kanban_state(self):
-		today = date.today()
-		for lead in self:
-			kanban_state = 'grey'
-			if lead.activity_date_deadline:
-				lead_date = fields.Date.from_string(lead.activity_date_deadline)
-				if lead_date >= today:
-					kanban_state = 'green'
-				else:
-					kanban_state = 'red'
-			lead.kanban_state = kanban_state
+	# @api.multi
+	# def _compute_kanban_state(self):
+	# 	today = date.today()
+	# 	for lead in self:
+	# 		kanban_state = 'grey'
+	# 		if lead.activity_date_deadline:
+	# 			lead_date = fields.Date.from_string(lead.activity_date_deadline)
+	# 			if lead_date >= today:
+	# 				kanban_state = 'green'
+	# 			else:
+	# 				kanban_state = 'red'
+	# 		lead.kanban_state = kanban_state
 
 	def _stage_find(self, team_id=False, domain=None, order='sequence'):
 		""" Determine the stage of the current lead with its teams, the given domain and the given team_id
