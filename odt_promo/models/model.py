@@ -78,22 +78,70 @@ class odt(models.Model):
 		return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
 	crm_odt_id = fields.Many2one('crm.lead', 'Opportunity')
-	etapa = fields.Selection([('solicitado','Solicitado'),
-							   ('cotizado','Cotizado'),
-							   ('aceptado','Aceptado')])
-	name = fields.Char(string='Nombre')
-	tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
+	name = fields.Char(related='crm_odt_id.name',string='Nombre')
+	tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id',related='crm_odt_id.tag_ids', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
 	stage_id = fields.Many2one('crm.stage', string='Stage', ondelete='restrict', track_visibility='onchange', index=True,
 		domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]",
 		group_expand='_read_group_stage_ids', default=lambda self: self._default_stage_id())
-	team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+	team_id = fields.Many2one('crm.team',related='crm_odt_id.team_id', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
 		index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the Sales Team.')
 	kanban_state = fields.Selection([('normal','In Progress'),('blocked','Blocked'),('done','Ready for next Stage')], 'Kanban State', default='normal')
-	user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
-	partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
+	user_id = fields.Many2one('res.users', related='crm_odt_id.user_id',string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
+	partner_id = fields.Many2one('res.partner',related='crm_odt_id.partner_id', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
 				help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
-	priority = fields.Selection([('0','Low'),('1','Normal'),('2','High')],'Priority', default='1')
-	color = fields.Integer('Color Index')
+	priority = fields.Selection([('0','Low'),('1','Normal'),('2','High'),('3','Very High')],related='crm_odt_id.priority',string='Priority', default='1')
+	color = fields.Integer(related='crm_odt_id.color',string='Color Index')
+	active = fields.Boolean(related='crm_odt_id.active',string='Active', default=True, track_visibility=True)
+	email_from = fields.Char('Email', help="Email address of the contact", track_visibility='onchange', track_sequence=4, index=True)
+	partner_address_email = fields.Char(related='crm_odt_id.partner_address_email',string='Partner Contact Email', readonly=True)
+	partner_address_phone = fields.Char(related='crm_odt_id.partner_address_phone',string='Partner Contact Phone', readonly=True)
+	date_deadline = fields.Date(related='crm_odt_id.date_deadline',string='Expected Closing', help="Estimate of the date on which the opportunity will be won.")
+	partner_name = fields.Char(related='crm_odt_id.partner_name',string='Customer Name')
+	date_conversion = fields.Datetime(related='crm_odt_id.date_conversion',string='Conversion Date', readonly=True)
+	description = fields.Text(related='crm_odt_id.description',string='Notes', track_visibility='onchange', track_sequence=6)
+	contact_name = fields.Char(related='crm_odt_id.contact_name',string='Contact Name', track_visibility='onchange', track_sequence=3)
+	day_close = fields.Float(related='crm_odt_id.day_close',string='Days to Close', store=True)
+	day_open = fields.Float(related='crm_odt_id.day_open',string='Days to Assign', store=True)
+	referred = fields.Char(related='crm_odt_id.referred',string='Referred By')
+	type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')],related='crm_odt_id.type',string='type', index=True, help="Type is used to separate Leads and Opportunities")
+	campaign_id = fields.Many2one(related='crm_odt_id.campaign_id',string='Campaing')
+	medium_id = fields.Many2one(related='crm_odt_id.medium_id',string='Medium')
+	source_id = fields.Many2one(related='crm_odt_id.source_id',string='Source')
+	street = fields.Char(related='crm_odt_id.street',string='Street')
+	street2 = fields.Char(related='crm_odt_id.street2',string='Street2')
+	zip = fields.Char(related='crm_odt_id.zip',string='Zip', change_default=True)
+	city = fields.Char(related='crm_odt_id.city',string='City')
+	state_id = fields.Many2one("res.country.state",related='crm_odt_id.state_id', string='State')
+	country_id = fields.Many2one('res.country',related='crm_odt_id.country_id', string='Country')
+	phone = fields.Char(related='crm_odt_id.phone',string='Phone', track_visibility='onchange', track_sequence=5)
+	mobile = fields.Char(related='crm_odt_id.mobile',string='Mobile')
+	function = fields.Char(related='crm_odt_id.function',string='Job Position')
+	title = fields.Many2one('res.partner.title',related='crm_odt_id.title')
+	company_id = fields.Many2one('res.company',related='crm_odt_id.company_id', string='Company', index=True, default=lambda self: self.env.user.company_id.id)
+	lost_reason = fields.Many2one('crm.lost.reason',related='crm_odt_id.lost_reason', string='Lost Reason', index=True, track_visibility='onchange')
+	partner_is_blacklisted = fields.Boolean(related='crm_odt_id.partner_is_blacklisted',string='Partner is blacklisted', readonly=True)
+	is_blacklisted = fields.Boolean(related='crm_odt_id.is_blacklisted')
+	marca = fields.Many2one('crm_marca', related='crm_odt_id.marca',string='Marca')
+	target = fields.Char(string='Target')
+	area = fields.Selection([('1','BTL')], 'Area')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
