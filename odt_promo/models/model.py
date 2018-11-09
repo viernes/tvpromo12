@@ -1,4 +1,4 @@
-from odoo import api, _, tools, fields, models, exceptions
+from odoo import api, _, tools, fields, models, exceptions,  SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
 from datetime import datetime, date, time
 
@@ -67,9 +67,101 @@ class odt(models.Model):
 	_name = 'odt.crm'
 	_description = 'Vista Kanban para visualizar informacion de crm en solo lectura'
 
-	name = fields.Char(string='Nombre')
-	crm_odt_id = fields.Many2one('crm.lead', 'Opportunity')
+	def _default_probability(self):
+		stage_id = self._default_stage_id()
+		if stage_id:
+			return self.env['crm.stage'].browse(stage_id).probability
+		return 10
 
+	def _default_stage_id(self):
+		team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
+		return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
+
+	crm_odt_id = fields.Many2one('crm.lead', 'Opportunity')
+	etapa = fields.Selection([('solicitado','Solicitado'),
+							   ('cotizado','Cotizado'),
+							   ('aceptado','Aceptado')])
+	name = fields.Char(string='Nombre')
+	tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
+	stage_id = fields.Many2one('crm.stage', string='Stage', ondelete='restrict', track_visibility='onchange', index=True,
+		domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]",
+		group_expand='_read_group_stage_ids', default=lambda self: self._default_stage_id())
+	team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+		index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the Sales Team.')
+	kanban_state = fields.Selection([('normal','In Progress'),('blocked','Blocked'),('done','Ready for next Stage')], 'Kanban State', default='normal')
+	user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
+	partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
+				help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
+	priority = fields.Selection([('0','Low'),('1','Normal'),('2','High')],'Priority', default='1')
+	color = fields.Integer('Color Index')
+
+
+
+
+	@api.model
+	def _onchange_user_values(self, user_id):
+		""" returns new values when user_id has changed """
+		if not user_id:
+			return {}
+		if user_id and self._context.get('team_id'):
+			team = self.env['crm.team'].browse(self._context['team_id'])
+			if user_id in team.member_ids.ids:
+				return {}
+		team_id = self.env['crm.team']._get_default_team_id(user_id=user_id)
+		return {'team_id': team_id}
+
+	@api.model
+	def _read_group_stage_ids(self, stages, domain, order):
+		 # retrieve team_id from the context and write the domain
+		# - ('id', 'in', stages.ids): add columns that should be present
+		# - OR ('fold', '=', False): add default columns that are not folded
+		# - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
+		team_id = self._context.get('default_team_id')
+		if team_id:
+			search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
+		else:
+			search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
+
+		# perform search
+		stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+		return stages.browse(stage_ids)
+
+	@api.multi
+	def _compute_kanban_state(self):
+		today = date.today()
+		for lead in self:
+			kanban_state = 'grey'
+			if lead.activity_date_deadline:
+				lead_date = fields.Date.from_string(lead.activity_date_deadline)
+				if lead_date >= today:
+					kanban_state = 'green'
+				else:
+					kanban_state = 'red'
+			lead.kanban_state = kanban_state
+
+	def _stage_find(self, team_id=False, domain=None, order='sequence'):
+		""" Determine the stage of the current lead with its teams, the given domain and the given team_id
+			:param team_id
+			:param domain : base search domain for stage
+			:returns crm.stage recordset
+		"""
+		# collect all team_ids by adding given one, and the ones related to the current leads
+		team_ids = set()
+		if team_id:
+			team_ids.add(team_id)
+		for lead in self:
+			if lead.team_id:
+				team_ids.add(lead.team_id.id)
+		# generate the domain
+		if team_ids:
+			search_domain = ['|', ('team_id', '=', False), ('team_id', 'in', list(team_ids))]
+		else:
+			search_domain = [('team_id', '=', False)]
+		# AND with the domain in parameter
+		if domain:
+			search_domain += list(domain)
+		# perform search, return the first found
+		return self.env['crm.stage'].search(search_domain, order=order, limit=1)
 
 
 class marca_crm(models.Model):
