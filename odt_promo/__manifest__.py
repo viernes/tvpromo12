@@ -9,7 +9,6 @@
     'depends': ['base', 'contacts','hr','sale','crm','helpdesk'],
     'data': ['views/view.xml',
              'reports/deliver_split.xml',
-             #'views/kanban_view.xml'
             ],
 
     'installable': True,

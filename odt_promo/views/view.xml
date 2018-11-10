@@ -276,12 +276,47 @@
                                                      <field name="qz_16"/>
                                                   </group>
                                           </group>
+
+
                         </page>
-                        <page name="btl" string="BTL" attrs="{'invisible': [('area','!=','1')]}">
+                        <page name="btl" string="BTL" >
                           <group>
-                            <field name="coverage"/>
-                            <field name="promo_type" placeholder="Puede ser un campo many2one o selection"/>
-                            <field name="no_raffle" placeholder=""/>
+                                <group>
+                                    <field name="coverage"/>
+                                    <field name="promo_type" placeholder="Puede ser un campo many2one o selection"/>
+                                    <field name="no_raffle" placeholder=""/>
+                                </group>
+                                <group string="Tipo de solicitud">
+                                    <field name="tipo_solicitud"/>
+                                    <field name="others" attrs="{'invisible': [('tipo_solicitud','!=','10')]}"/> 
+                                </group>
+                              <field name="descrption" placeholder="Descripcion"/>
+                              <page name="mat_elabor" string="Material a Elaborar">
+                                  <field name="tabla_material" widget="one2many_list">
+                                    <tree editable="bottom">
+                                        <field name = "tipo_material" />
+                                        <field name = "medidas_formatos" />
+                                    </tree>
+                                  </field>
+                              </page>
+
+                              <br/>
+                              <h3>Cotizacion</h3>
+                              <br/>
+                              <field name="propiedad"/>
+                              <page name="cotizacion_interna" string="Cotizacion">
+                                  <field name="tabla_cotizacion" widget="one2many_list">
+                                    <tree editable="bottom">
+                                        <field name="concepto" style="width: 20 %%" widget="monetary" />
+                                        <field name="cantidad" style="width: 10 %%"/>
+                                        <field name="dias" style="width: 100 %%" />
+                                        <field name="precio_uni_cliente" widget="monetary" style="width: 15 %%"/>
+                                        <field name="costo_cliente" widget="monetary" style="width: 15 %%"/>
+                                        <field name="precio_uni_gtvp" widget="monetary" style="width: 15 %%"/>
+                                        <field name="pago_terceros" widget="monetary" style="width: 15 %%"/>
+                                    </tree>
+                                  </field>
+                              </page>
                           </group>
                         </page>
                         </notebook>

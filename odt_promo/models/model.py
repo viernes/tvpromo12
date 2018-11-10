@@ -77,6 +77,11 @@ class odt(models.Model):
 		team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
 		return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
+	# @api.depends('tabla_cotizacion')
+	# def _tot1_concepto(self):
+	# 	self.total_g1 = sum(line.sub_total for line in self.option_lines1)
+		
+
 	crm_odt_id = fields.Many2one('crm.lead', 'Opportunity')
 	name = fields.Char(string='Nombre')
 	tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id',related='crm_odt_id.tag_ids', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
@@ -170,9 +175,13 @@ class odt(models.Model):
 	coverage = fields.Char(string='Cobertura')
 	promo_type = fields.Char(string='Tipo de Promocion')
 	no_raffle = fields.Integer(string='No. Sorteos')
-
-
-
+	propiedad = fields.Char(string='PROPIEDAD:')
+	tipo_solicitud = fields.Selection([('1','Creatividad 360'),('2','Creatividad'),('3','Master graphic'),('4','Material pop'),('5','Template'),
+									  ('7','Diseño'),('8','Concepto'),('9','Banners promoweb'),('10','Otros')], string='Tipo de Solicitud')
+	others = fields.Text(string='Otros')
+	descrption = fields.Text(string='Descrpicion')
+	tabla_material = fields.One2many('odt.materiales', 'material_id')
+	tabla_cotizacion = fields.One2many('odt.cotizacion','cotizacion_id')
 
 	# @api.model
 	# def _onchange_user_values(self, user_id):
@@ -239,6 +248,25 @@ class odt(models.Model):
 		# perform search, return the first found
 		return self.env['crm.stage'].search(search_domain, order=order, limit=1)
 
+class materiales(models.Model):
+	_name = 'odt.materiales'
+
+	material_id = fields.Many2one("odt.crm",ondelete='cascade')
+	tipo_material = fields.Char(string='Tipo Material')
+	medidas_formatos = fields.Char(string='Medidas / formatos')
+
+class cotizaciones(models.Model):
+	_name = 'odt.cotizacion'
+
+	cotizacion_id = fields.Many2one('odt.crm', ondelete='cascade')
+	concepto = fields.Char(string='Concepto')
+	cantidad = fields.Integer(string='Cantidad')
+	dias = fields.Integer(string='Dias')
+	precio_uni_cliente = fields.Float(string='Precio Unitario Cliente')
+	costo_cliente = fields.Float(string='*Costo Cliente')
+	precio_uni_gtvp = fields.Float(string='Precio unitario GTVP')
+	pago_terceros = fields.Float(string='*Pago a Terceros')
+		
 
 class marca_crm(models.Model):
 	"""docstring for marca_crm"""
