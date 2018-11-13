@@ -460,17 +460,23 @@
                 </xpath>
               </field>
       </record>
+
+      <!-- Campos para el stock picking o Inventario -->
+
       <record id="inherit_inventary_field" model="ir.ui.view">
               <field name="name">inherit.inventary.field</field>
               <field name="model">stock.picking</field>
               <field name="inherit_id" ref="stock.view_picking_form"/>
               <field name="arch" type="xml">
                 <xpath expr="//field[@name='origin']" position="after">
-                  <field name="return_reason" attrs="{'invisible': [('scheduled_date','=',False)]}"/>
-                  <field name="receive" attrs="{'invisible': [('scheduled_date','=',False)]}"/>
+                  <field name="return_reason" attrs="'invisible': [('picking_type_code','=','outgoing')]}"/>
+                  <field name="receive" attrs="'invisible': [('picking_type_code','=','incoming')]}"/>
                 </xpath>
               </field>
       </record>
+
+      
+
 
       <record id="inherit_invisible_field_leaves" model="ir.ui.view">
               <field name="name">inherit.invisible.field.leaves</field>

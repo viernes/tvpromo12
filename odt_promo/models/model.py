@@ -258,6 +258,21 @@ class materiales(models.Model):
 class cotizaciones(models.Model):
 	_name = 'odt.cotizacion'
 
+
+	# @api.one
+	# @api.depends('price_unit', 'qty', 'option')
+	# def _conceptos(self):
+	# 	self.precio_uni_gtvp = self.cantidad * self.price_unit
+	# 	self.costo_cliente = self.cantidad * self.
+	# 	self.pago_terceros = self.
+
+
+	# @api.depends('option_lines1')
+	# def _tot1_concepto(self):
+	# 	self.precio_uni_cliente = sum(line.sub_total for line in self.option_lines1)
+	# 	self.costo_cliente = sum(line.sub_total for line in self.option_lines1)
+	# 	self.pago_terceros = sum(line.sub_total for line in self.option_lines1)
+		
 	cotizacion_id = fields.Many2one('odt.crm', ondelete='cascade')
 	concepto = fields.Char(string='Concepto')
 	cantidad = fields.Integer(string='Cantidad')
@@ -266,7 +281,6 @@ class cotizaciones(models.Model):
 	costo_cliente = fields.Float(string='*Costo Cliente')
 	precio_uni_gtvp = fields.Float(string='Precio unitario GTVP')
 	pago_terceros = fields.Float(string='*Pago a Terceros')
-		
 
 class marca_crm(models.Model):
 	"""docstring for marca_crm"""
