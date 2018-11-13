@@ -62,6 +62,17 @@ class crmlead(models.Model):
 	qz_15 = fields.Char(string='¿CUÁLES SON LOS ENTREGABLES?')
 	qz_16 = fields.Char(string='¿SE TRABAJARA EN CONJUNCO CON ALGUNA AGENCIA DE LA MARCA?')
 
+
+	# @api.models
+	# def write(self,values):
+	# 	stage_detect = self.env['crm.lead'].search([('stage_id', '=', 'new')])
+	# 	if stage_detect:
+	# 		pintf ('Has cambiado de etapa')
+
+	@api.onchange('stage_id')
+	def _onchange_stage(self):
+		print ("Hola mundo")
+	
 class odt(models.Model):
 
 	_name = 'odt.crm'
