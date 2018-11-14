@@ -27,8 +27,11 @@
                                 <th name="td_sched_date_h">
                                     <strong>Date</strong>
                                 </th>
-                                <th>
+                                <th t-if="'/OUT/' in o.name">
                                     <strong>Recibe</strong>
+                                </th>
+                                <th t-if="'/IN/' in o.name">
+                                    <strong>Motivo de la Devolucion</strong>
                                 </th>
                             </tr>
                         </thead>
@@ -45,8 +48,11 @@
                                         <span t-field="o.scheduled_date"/>
                                    </t>
                                 </td>
-                                <td t-if="o.receive">
+                                <td t-if="'/OUT/' in o.name">
                                     <span t-field="o.receive"/>
+                                </td>
+                                <td t-if="'/IN/' in o.name">
+                                    <span t-field="o.return_reason"/>
                                 </td>
                             </tr>
                         </tbody>

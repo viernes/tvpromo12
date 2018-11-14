@@ -63,16 +63,15 @@ class crmlead(models.Model):
 	qz_16 = fields.Char(string='¿SE TRABAJARA EN CONJUNCO CON ALGUNA AGENCIA DE LA MARCA?')
 
 
-	# @api.models
-	# def write(self,values):
-	# 	stage_detect = self.env['crm.lead'].search([('stage_id', '=', 'new')])
-	# 	if stage_detect:
-	# 		pintf ('Has cambiado de etapa')
+# class confirm_wizard(models.TransientModel):
+#     _name = 'crm.lead'
 
-	@api.onchange('stage_id')
-	def _onchange_stage(self):
-		print ("Hola mundo")
-	
+# 	@api.model
+# 	def write(self,values):
+# 		stage_detect = self.env['crm.lead'].search([('stage_ids')])
+# 		if stage_detect:
+# 			print 'yes function'
+
 class odt(models.Model):
 
 	_name = 'odt.crm'
@@ -300,11 +299,32 @@ class marca_crm(models.Model):
 
 	name = fields.Char(string='Nombre')
 
-class policysli(models.Model):
+class helpdesk(models.Model):
 
 	_inherit = 'helpdesk.sla'
 
 	time_minutes = fields.Integer(help='En este campo podras ingresar los minutos asignados al ticket')
+	
+class clasificacionTeam(models.Model):
+	"""docstring for clasificacionTeam"""
+	_inherit = 'helpdesk.team'
+	
+	class_id = fields.Selection([('1','Mantenimiento'),('2','Mensajeria'),('3','Sistemas / Soporte')], string='Especificacion de Equipo', requiered=True)
+
+
+class Clasificacion(models.Model):
+	_inherit = 'helpdesk.ticket'
+
+	clasi_mantenimiento = fields.Selection([('1','Electricidad'),('2','Carpintería'),('3','Cerrajería'),('4','Plomería'),
+											('5','Albañilería'),('6','Pintura'),('7','Pisos')], string='Clasificacion')
+	clasi_sistemas = fields.Selection([('1','Hardware'),('2','Software'),('3','Capacitación'),('4','Usuario'),('5','Electricidad'),('6','Internet'),('7','Telefonía'),('8','Antivirus')],string='Clasificacion')
+	alias_check = fields.Integer(string='Alias',compute='_alias')	
+
+	@api.depends('team_id')
+	def _alias(self):
+		if	self.team_id:
+			self.alias_check = self.team_id.class_id
+	
 
 class expensesfields(models.Model):
 
@@ -319,7 +339,6 @@ class expensesfields(models.Model):
 	@api.depends('prove_amount','returned','diferencia','delivery_amount')
 	def _total_mejoras(self):
 	    self.diferencia = (float(self.delivery_amount)) - (float(self.prove_amount)) - (float(self.returned))
-
 	
 class inventory(models.Model):
 
@@ -327,4 +346,25 @@ class inventory(models.Model):
 
 	return_reason = fields.Char(string='Motivo de la Devolucion')
 	receive = fields.Char(string='Quien recibe')
+
+class Flotilla(models.Model):
+
+	_inherit = 'fleet.vehicle'
+
+	date_emision_tc = fields.Date(string='Fecha de Emision TC')
+	date_vencimiento_tc = fields.Date(string='Fecha de Vencimiento TC')
+	date_verificacion = fields.Date(string='Fecha de Verificacion')
+	reason = fields.Selection([('1','Venta'),('2','Siniestro')], string='Razon')
+	comments = fields.Text(string='Comentarios')
+	compania_seguro = fields.Char(string='Compañia de seguro')
+	start_date = fields.Date(string='Fecha de inicio de seguro')
+	end_date = fields.Date(string='Fecha de termino de seguro')
+	next_km = fields.Integer(string='Siguiente Kilometraje')
+	next_service = fields.Date(string='Siguiente Servicio')
+
+# fecha_ingreso = fields.Date("Fecha de ingreso", default=datetime.today())
+# antiguedad = fields.Char("Antiguedad", readonly=True, compute='_compute_ant')
+# tipo_de_sangre = fields.Many2one('hr.sangre', "Grupo Sanguineo")
+# numero_empleado = fields.Integer('Numero de Empleado')
+# fecha_baja =  fields.Date("Fecha de Baja")
 
