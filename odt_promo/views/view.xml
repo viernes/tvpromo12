@@ -2,39 +2,39 @@
   <odoo>
     <data>
       <!-- Campos nuevos en la interface de CRM -->
-      <record id="inherit_fields_form" model="ir.ui.view">
-        <field name="name">inherit.fields.form</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
-        <field name="arch" type="xml">
-          <xpath expr="//field[@name='tag_ids']" position="after">
-            <field name="marca"/>
-            <field name="target"/>
-          </xpath>
-        </field>
-      </record>
+        <record id="inherit_fields_form" model="ir.ui.view">
+          <field name="name">inherit.fields.form</field>
+          <field name="model">crm.lead</field>
+          <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+              <field name="marca"/>
+              <field name="target"/>
+            </xpath>
+          </field>
+        </record>
 
-      <record id="inherit_name_page" model="ir.ui.view">
-        <field name="name">inherit.name.page</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
-        <field name="arch" type="xml">
-          <xpath expr="//form[1]/sheet[1]/notebook[1]//page[1]" position="attributes">
-            <attribute name="string">Mecanica</attribute>
-          </xpath>
-        </field>
-      </record>
+        <record id="inherit_name_page" model="ir.ui.view">
+          <field name="name">inherit.name.page</field>
+          <field name="model">crm.lead</field>
+          <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+          <field name="arch" type="xml">
+            <xpath expr="//form[1]/sheet[1]/notebook[1]//page[1]" position="attributes">
+              <attribute name="string">Mecanica</attribute>
+            </xpath>
+          </field>
+        </record>
 
-      <record id="invisible_planned" model="ir.ui.view">
-        <field name="name">inherit.invisible.planned</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.quick_create_opportunity_form"/>
-        <field name="arch" type="xml">
-          <xpath expr="//field[@name='planned_revenue']" position="attributes">
-            <attribute name="invisible">1</attribute>
-          </xpath>
-        </field>
-      </record>
+        <record id="invisible_planned" model="ir.ui.view">
+          <field name="name">inherit.invisible.planned</field>
+          <field name="model">crm.lead</field>
+          <field name="inherit_id" ref="crm.quick_create_opportunity_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='planned_revenue']" position="attributes">
+              <attribute name="invisible">1</attribute>
+            </xpath>
+          </field>
+        </record>
 
 
       <!-- Domain para contador ODT -->    
@@ -291,7 +291,12 @@
                                     <field name="no_raffle" placeholder=""/>
                                 </group>
                                 <group string="Tipo de solicitud">
-                                  
+                                    <field name="activation"/>
+                                    <field name="mystery_shopper"/>
+                                    <field name="promotoria" />
+                                    <field name="sumpling"/>
+                                    <field name="production_material"/>
+                                    <field name="production_promocionales"/>
                                 </group>
                               <field name="descrption" placeholder="Descripcion"/>
                               <page name="mat_elabor" string="Material a Elaborar">
@@ -552,9 +557,6 @@
                 </xpath>
               </field>
       </record>
-
-      
-
 
       <record id="inherit_invisible_field_leaves" model="ir.ui.view">
               <field name="name">inherit.invisible.field.leaves</field>
