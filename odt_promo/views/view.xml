@@ -283,7 +283,7 @@
 
 
                         </page>
-                        <page name="btl" string="BTL" >
+                        <page name="btl" string="BTL"  attrs="{'invisible': [('area','!=','1')]}" >
                           <group>
                                 <group>
                                     <field name="coverage"/>
@@ -291,14 +291,14 @@
                                     <field name="no_raffle" placeholder=""/>
                                 </group>
                                 <group string="Tipo de solicitud">
-                                    <field name="tipo_solicitud"/>
-                                    <field name="others" attrs="{'invisible': [('tipo_solicitud','!=','10')]}"/> 
+                                  
                                 </group>
                               <field name="descrption" placeholder="Descripcion"/>
                               <page name="mat_elabor" string="Material a Elaborar">
                                   <field name="tabla_material" widget="one2many_list">
                                     <tree editable="bottom">
                                         <field name = "tipo_material" />
+                                        <field name = "quantity" />
                                         <field name = "medidas_formatos" />
                                     </tree>
                                   </field>

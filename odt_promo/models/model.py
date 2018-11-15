@@ -138,8 +138,9 @@ class odt(models.Model):
 	is_blacklisted = fields.Boolean(related='crm_odt_id.is_blacklisted')
 	marca = fields.Many2one('crm_marca', related='crm_odt_id.marca',string='Marca')
 	target = fields.Char(string='Target')
-	area = fields.Selection([('1','BTL')], 'Area')
-	status = fields.Selection([('1','Solicitado'),('2','Cotizado'),('3','Aceptado')])
+	area = fields.Selection([('1','BTL'),('2','Produccion'),('3','Diseño y Creatividad'),('4','Gestoria y logistica'),('5','Call Center'),('6','Punto de Venta'),('7','Digital')], string='Area')
+
+	# BRIEF
 	rp_1 = fields.Char(related='crm_odt_id.rp_1',string='¿Para que estamos haciendo este proyecto y cual es el reto?')
 	rp_2 = fields.Char(related='crm_odt_id.rp_2',string='¿Que queremos que se sepa y sienta la gente sobre el proeycto?')
 	rp_3 = fields.Char(related='crm_odt_id.rp_3',string='¿Que buscamos lograr?')
@@ -186,12 +187,22 @@ class odt(models.Model):
 	promo_type = fields.Char(string='Tipo de Promocion')
 	no_raffle = fields.Integer(string='No. Sorteos')
 	propiedad = fields.Char(string='PROPIEDAD:')
-	tipo_solicitud = fields.Selection([('1','Creatividad 360'),('2','Creatividad'),('3','Master graphic'),('4','Material pop'),('5','Template'),
-									  ('7','Diseño'),('8','Concepto'),('9','Banners promoweb'),('10','Otros')], string='Tipo de Solicitud')
+
 	others = fields.Text(string='Otros')
 	descrption = fields.Text(string='Descrpicion')
 	tabla_material = fields.One2many('odt.materiales', 'material_id')
 	tabla_cotizacion = fields.One2many('odt.cotizacion','cotizacion_id')
+
+	# BTL
+	activation = fields.Boolean(string='Activacion')
+	mystery_shopper = fields.Boolean(string='Mystery Shopper')
+	promotoria = fields.Boolean(string='Promotoria')
+	sumpling = fields.Boolean(string='sumpling')
+	production_material = fields.Boolean(string='Produccion de Materiales')
+	production_promocionales = fields.Boolean(string='Produccion de Promocionales')
+
+
+
 
 	# @api.model
 	# def _onchange_user_values(self, user_id):
@@ -262,7 +273,10 @@ class materiales(models.Model):
 	_name = 'odt.materiales'
 
 	material_id = fields.Many2one("odt.crm",ondelete='cascade')
-	tipo_material = fields.Char(string='Tipo Material')
+	quantity = fields.Integer(string='Cantidad')
+	tipo_material = fields.Selection([('1','Demostradora'),('2','Demo edecán'),('3','Promotor'),('4','Animador'),('5','Edecán A'),
+									 ('6','Edecán AA'),('7','Edecán AAA'),('8','Gio A'),('9','Gio AA'),('10','Gio AAA'),('11','Modelos'),
+									 ('12','Otros')],string='Tipo Material')
 	medidas_formatos = fields.Char(string='Medidas / formatos')
 
 class cotizaciones(models.Model):
