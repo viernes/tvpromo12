@@ -281,9 +281,8 @@
                                                      <field name="qz_16"/>
                                                   </group>
                                           </group>
-
-
                         </page>
+
                         <page name="btl" string="BTL"  attrs="{'invisible': [('area','!=','1')]}" >
                           <group>
                                 <group>
@@ -355,8 +354,12 @@
                                       </group>
                                     </group>
                                 </page>
+                                <group>
+                                  <field name="btl"/>
+                                </group>
                               </group>
                         </page>
+
                         <page name="production" string="Produccion"  attrs="{'invisible': [('area','!=','2')]}">
                           <group>
                             <group>
@@ -456,7 +459,11 @@
                                     </group>
                                 </page>
                               </group>
+                              <group>
+                                <field name="produccion"/>
+                              </group>
                         </page>
+
                         <page name="desing" string="Diseno y Creatividad"  attrs="{'invisible': [('area','!=','3')]}">
                           <group>
                             <group>
@@ -522,6 +529,9 @@
                                     </group>
                                 </page>
                             </group> 
+                            <group>
+                              <field name="diseño_creatividad"/>
+                            </group>
                         </page>
                         
 
@@ -627,8 +637,10 @@
                                     </group>
                                 </page> 
                             </group>
+                            <group>
+                              <field name="gestoria_logistica"/>
+                            </group>
                         </page>
-
 
 
                         <page name="callcenter" string="Call Center"  attrs="{'invisible': [('area','!=','5')]}">
@@ -704,7 +716,15 @@
                                     </group>
                                 </page> 
                             </group>
+                            <group>
+                              <field name="digital"/>
+                            </group>
                         </page>
+
+
+
+
+
 
 
                         <page name="digital" string="Digital"  attrs="{'invisible': [('area','!=','6')]}">
@@ -918,7 +938,17 @@
                           </group>
                   </group>
             </page>
-
+            <page name="montos" string="Presupuesto Autorizado">
+              <group string="Presupuestos por areas">
+                            <field name="btl" />
+                            <field name="produccion" />
+                            <field name="diseño_creatividad" />
+                            <field name="gestoria_logistica" />
+                            <field name="call_center"/>
+                            <field name="digital"/>
+                            <field name="medios"/>
+              </group>
+            </page>
 
           </xpath>
         </field>

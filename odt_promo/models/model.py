@@ -17,6 +17,13 @@ class crmlead(models.Model):
 	slogan_marca = fields.Char(string='Eslogan')
 	logo_marca = fields.Binary(string='Logo')
 	odt_count = fields.Integer(string='lead', compute='_compute_odt_count')
+	btl = fields.Float(string='BTL')
+	produccion = fields.Float(string='Produccion')
+	diseño_creatividad = fields.Float(string='Diseño y Creatividad ')
+	gestoria_logistica = fields.Float(string='Gestoria y Logistica')
+	call_center = fields.Float(string='Call Center')
+	digital = fields.Float(string='Digital ')
+	medios = fields.Float(string='Medios')
 
 
 	@api.multi
@@ -144,15 +151,6 @@ class odt(models.Model):
 		self.total_interno_digital = sum(line.costo_interno for line in self.tabla_cotizacion_digital)
 		self.total_recuperacion_digital = sum(line.recuperacion for line in self.tabla_cotizacion_digital)
 
-
-
-
-
-
-
-
-
-
 	# @api.depends('project')
 	# def _project_name(self):
 	# 	if	self.project:
@@ -208,7 +206,7 @@ class odt(models.Model):
 	is_blacklisted = fields.Boolean(related='crm_odt_id.is_blacklisted')
 	marca = fields.Many2one('crm_marca', related='crm_odt_id.marca',string='Marca')
 	target = fields.Char(string='Target')
-	area = fields.Selection([('1','BTL'),('2','Produccion'),('3','Diseño y Creatividad'),('4','Gestoria y logistica'),('5','Call Center'),('6','Digital')], string='Area')
+	area = fields.Selection([('1','BTL'),('2','Produccion'),('3','Diseño y Creatividad'),('4','Gestoria y logistica'),('5','Call Center'),('6','Digital'),('7','Medios')], string='Area')
 
 	# BRIEF
 	rp_1 = fields.Char(related='crm_odt_id.rp_1',string='¿Para que estamos haciendo este proyecto y cual es el reto?')
@@ -284,6 +282,10 @@ class odt(models.Model):
 	total_terceros_btl = fields.Float(string='Total Terceros',compute=_btl_totales)
 	total_interno_btl = fields.Float(string='Total Interno',compute=_btl_totales)
 	total_recuperacion_btl = fields.Float(string='Total Recuperacion',compute=_btl_totales)
+	btl = fields.Float(related='crm_odt_id.btl',string='BTL P. Autorizado')
+
+
+
 		# Produccion
 	p_radio = fields.Boolean(string='Radio')
 	p_tv = fields.Boolean(string='TV')
@@ -337,6 +339,9 @@ class odt(models.Model):
 	total_terceros_produ = fields.Float(string='Total Terceros',compute=_produccion_totales)
 	total_interno_produ = fields.Float(string='Total Interno',compute=_produccion_totales)
 	total_recuperacion_produ = fields.Float(string='Total Recuperacion',compute=_produccion_totales)
+	produccion = fields.Float(related='crm_odt_id.produccion',string='Produccion P. Autorizado')
+
+
 
 		# Diseño y Creatividad
 	creativity_360 = fields.Boolean(string='Cretividad 360')
@@ -361,13 +366,13 @@ class odt(models.Model):
 	d_otros = fields.Boolean(string='Otros (especificar)')
 	d_comments = fields.Text(string='Comentarios')
 	dc_especificacion = fields.Text(string='Comentarios y especificaciones')
-	
 	total_cliente_diseno = fields.Float(string='Total Cliente',compute=_diseno_totales)
 	total_gtvo_diseno = fields.Float(string='Total GTVP',compute=_diseno_totales)
 	total_terceros_diseno = fields.Float(string='Total Terceros',compute=_diseno_totales)
 	total_interno_diseno = fields.Float(string='Total Interno',compute=_diseno_totales)
 	total_recuperacion_diseno = fields.Float(string='Total Recuperacion',compute=_diseno_totales)
-	
+	diseño_creatividad = fields.Float(related='crm_odt_id.diseño_creatividad',string='Diseño y Creatividad P. Autorizado')
+
 		# Gestoria y logistica Sorteo
 	gl_date_sorteo = fields.Date(string='Fecha del Sorteo')
 	site_sorteo = fields.Char(string='Lugar del Sorteo')
@@ -426,6 +431,8 @@ class odt(models.Model):
 	total_terceros_gestoria = fields.Float(string='Total Terceros',compute=_gestoria_totales)
 	total_interno_gestoria = fields.Float(string='Total Interno',compute=_gestoria_totales)
 	total_recuperacion_gestoria = fields.Float(string='Total Recuperacion',compute=_gestoria_totales)
+	gestoria_logistica = fields.Float(related='crm_odt_id.gestoria_logistica',string='Gestoria y Logistica P. Autorizado')
+
 
 	# Call Center
 	cc_registro = fields.Boolean(string='Registro')
@@ -457,6 +464,9 @@ class odt(models.Model):
 	total_terceros_callcenter = fields.Float(string='Total Terceros',compute=_callcenter_totales)
 	total_interno_callcenter = fields.Float(string='Total Interno',compute=_callcenter_totales)
 	total_recuperacion_callcenter = fields.Float(string='Total Recuperacion',compute=_callcenter_totales)
+	call_center = fields.Float(related='crm_odt_id.call_center',string='Call Center P. Autorizado')
+
+	
 
 		#Digital
 	dg_web = fields.Boolean(string='Pagina web / micrositio')
@@ -521,8 +531,11 @@ class odt(models.Model):
 	total_terceros_digital = fields.Float(string='Total Terceros',compute=_digital_totales)
 	total_interno_digital = fields.Float(string='Total Interno',compute=_digital_totales)
 	total_recuperacion_digital = fields.Float(string='Total Recuperacion',compute=_digital_totales)
+	digital = fields.Float(related='crm_odt_id.digital',string='Digital P. Autorizado')
 
 
+
+	# medios = fields.Monetary(string='Medios P. Autorizado')
 
 
 	@api.model
