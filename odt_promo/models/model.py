@@ -11,7 +11,6 @@ class crmlead(models.Model):
 	target = fields.Char(string='Target')
 	product = fields.Char(string='Producto')
 	project = fields.Many2one('project.project',string='Proyecto')
-	project_name = fields.Char(string='Nombre del proyecto', compute='_project_name')
 	term_promo_date = fields.Date(string='Vigencia de la promocion')
 	temporalidad = fields.Char(string='Temporalidad')
 	slogan_marca = fields.Char(string='Eslogan')
@@ -22,19 +21,15 @@ class crmlead(models.Model):
 	diseño_creatividad = fields.Float(string='Diseño y Creatividad ')
 	gestoria_logistica = fields.Float(string='Gestoria y Logistica')
 	call_center = fields.Float(string='Call Center')
-	digital = fields.Float(string='Digital ')
+	digital = fields.Float(string='Digital')
 	medios = fields.Float(string='Medios')
-
 
 	@api.multi
 	def _compute_odt_count(self):
 		count = self.env['odt.crm']
 		self.odt_count = count.search_count([('crm_odt_id', 'in', [a.id for a in self])])
 
-	@api.depends('project')
-	def _project_name(self):
-		if	self.project:
-			self.project_name = self.project.sale_line_id
+
 
 	""" Quiz Fields """
 
@@ -76,15 +71,6 @@ class crmlead(models.Model):
 	qz_16 = fields.Char(string='¿SE TRABAJARA EN CONJUNCO CON ALGUNA AGENCIA DE LA MARCA?')
 
 
-# class confirm_wizard(models.TransientModel):
-#     _name = 'crm.lead'
-
-# 	@api.model
-# 	def write(self,values):
-# 		stage_detect = self.env['crm.lead'].search([('stage_ids')])
-# 		if stage_detect:
-# 			print 'yes function'
-
 class odt(models.Model):
 
 	_name = 'odt.crm'
@@ -100,7 +86,7 @@ class odt(models.Model):
 		team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
 		return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
-	# Funcion para la sumatoria de lineas
+	# Funcion para la sumatoria de lineas dentro de la tabla cotizacion
 
 	@api.depends('tabla_cotizacion_btl')
 	def _btl_totales(self):
@@ -150,14 +136,6 @@ class odt(models.Model):
 		self.total_terceros_digital= sum(line.pago_terceros for line in self.tabla_cotizacion_digital)
 		self.total_interno_digital = sum(line.costo_interno for line in self.tabla_cotizacion_digital)
 		self.total_recuperacion_digital = sum(line.recuperacion for line in self.tabla_cotizacion_digital)
-
-	# @api.depends('project')
-	# def _project_name(self):
-	# 	if	self.project:
-	# 		self.project_name = self.project.sale_line_id.order_line.product_id.name
-
-
-	# , compute='_project_name'
 		
 	project_name = fields.Char(string='Nombre del proyecto')
 	crm_odt_id = fields.Many2one('crm.lead', 'Opportunity')
@@ -206,7 +184,7 @@ class odt(models.Model):
 	is_blacklisted = fields.Boolean(related='crm_odt_id.is_blacklisted')
 	marca = fields.Many2one('crm_marca', related='crm_odt_id.marca',string='Marca')
 	target = fields.Char(string='Target')
-	area = fields.Selection([('1','BTL'),('2','Produccion'),('3','Diseño y Creatividad'),('4','Gestoria y logistica'),('5','Call Center'),('6','Digital'),('7','Medios')], string='Area')
+	area = fields.Selection([('1','BTL'),('2','Produccion'),('3','Diseño'),('4','Gestoria'),('5','Contact Center'),('6','Digital'),('7','Medios'),('8','logistica'),('9','Creatividad')], string='Area')
 
 	# BRIEF
 	rp_1 = fields.Char(related='crm_odt_id.rp_1',string='¿Para que estamos haciendo este proyecto y cual es el reto?')
@@ -284,8 +262,6 @@ class odt(models.Model):
 	total_recuperacion_btl = fields.Float(string='Total Recuperacion',compute=_btl_totales)
 	btl = fields.Float(related='crm_odt_id.btl',string='BTL P. Autorizado')
 
-
-
 		# Produccion
 	p_radio = fields.Boolean(string='Radio')
 	p_tv = fields.Boolean(string='TV')
@@ -334,14 +310,15 @@ class odt(models.Model):
 	# Tabla cotizacion
 	tabla_material_produccion = fields.One2many('odt.materiales.produccion', 'material_produccion_id')
 	tabla_cotizacion_produccion = fields.One2many('odt.cotizacion.produccion','cotizacion_produccion_id')
+
+
 	total_cliente_produ = fields.Float(string='Total Cliente',compute=_produccion_totales)
 	total_gtvo_produ = fields.Float(string='Total GTVP',compute=_produccion_totales)
 	total_terceros_produ = fields.Float(string='Total Terceros',compute=_produccion_totales)
 	total_interno_produ = fields.Float(string='Total Interno',compute=_produccion_totales)
 	total_recuperacion_produ = fields.Float(string='Total Recuperacion',compute=_produccion_totales)
 	produccion = fields.Float(related='crm_odt_id.produccion',string='Produccion P. Autorizado')
-
-
+	firma1 = fields.Binary(string='Firma 1')
 
 		# Diseño y Creatividad
 	creativity_360 = fields.Boolean(string='Cretividad 360')
@@ -426,13 +403,13 @@ class odt(models.Model):
 	extra = fields.Text(string='Fecha y lugar de entrega de premios mayores a 1,500 Salarios(Minimo vigente)')
 	gl_observations = fields.Text(string='Observaciones')
 	tabla_cotizacion_gestoria = fields.One2many('odt.cotizacion.gestoria','cotizacion_gestoria_id')
+
 	total_cliente_gestoria = fields.Float(string='Total Cliente',compute=_gestoria_totales)
 	total_gtvo_gestoria = fields.Float(string='Total GTVP',compute=_gestoria_totales)
 	total_terceros_gestoria = fields.Float(string='Total Terceros',compute=_gestoria_totales)
 	total_interno_gestoria = fields.Float(string='Total Interno',compute=_gestoria_totales)
 	total_recuperacion_gestoria = fields.Float(string='Total Recuperacion',compute=_gestoria_totales)
 	gestoria_logistica = fields.Float(related='crm_odt_id.gestoria_logistica',string='Gestoria y Logistica P. Autorizado')
-
 
 	# Call Center
 	cc_registro = fields.Boolean(string='Registro')
@@ -459,14 +436,13 @@ class odt(models.Model):
 	cc_referencia_registro = fields.Text(string='Referencia de registros de proyecto anterior o similar')
 	cc_comentarios = fields.Text(string='Comentairos Adicionales')
 	tabla_cotizacion_callcenter = fields.One2many('odt.cotizacion.callcenter','cotizacion_callcenter_id')
+
 	total_cliente_callcenter = fields.Float(string='Total Cliente',compute=_callcenter_totales)
 	total_gtvo_callcenter = fields.Float(string='Total GTVP',compute=_callcenter_totales)
 	total_terceros_callcenter = fields.Float(string='Total Terceros',compute=_callcenter_totales)
 	total_interno_callcenter = fields.Float(string='Total Interno',compute=_callcenter_totales)
 	total_recuperacion_callcenter = fields.Float(string='Total Recuperacion',compute=_callcenter_totales)
 	call_center = fields.Float(related='crm_odt_id.call_center',string='Call Center P. Autorizado')
-
-	
 
 		#Digital
 	dg_web = fields.Boolean(string='Pagina web / micrositio')
@@ -486,7 +462,6 @@ class odt(models.Model):
 	dg_newsletter = fields.Boolean(string='Newsletter')
 	dg_trivias = fields.Boolean(string='Trivias')
 	dg_aplications_realtime = fields.Boolean(string='Aplicacion de reportes en tiempo real')
-
 	dg_descripcion_va = fields.Text(string='Descripcion')
 	n_niveles = fields.Integer(string='Numero de niveles')
 	dg_opt_1 = fields.Boolean(string='Animacion 2D')
@@ -600,12 +575,11 @@ class MaterialesDiseno(models.Model):
 	tipo_material = fields.Char(string='Tipo de Material')
 	medidas_formatos = fields.Char(string='Medidas / formatos')
 
-
 # Cotizaicones
 class CotizacionesBTL(models.Model):
 	_name = 'odt.cotizacion'
 		
-	cotizacion_id = fields.Many2one('odt.crm', ondelete='cascade')
+	cotizacion_id = fields.Many2one('odt.crm')
 	concepto = fields.Char(string='Concepto')
 	cantidad = fields.Integer(string='Cantidad')
 	dias = fields.Integer(string='Dias')
@@ -616,10 +590,11 @@ class CotizacionesBTL(models.Model):
 	costo_interno = fields.Float(string='*Costo Interno')
 	recuperacion = fields.Float(string='Costo minimo de recuperacion')
 
+
 class CotizacionesProduccion(models.Model):
 	_name = 'odt.cotizacion.produccion'
 		
-	cotizacion_produccion_id = fields.Many2one('odt.crm', ondelete='cascade')
+	cotizacion_produccion_id = fields.Many2one('odt.crm',ondelete='cascade')
 	concepto = fields.Char(string='Concepto')
 	cantidad = fields.Integer(string='Cantidad')
 	dias = fields.Integer(string='Dias')
@@ -676,7 +651,7 @@ class CotizacionesDigital(models.Model):
 	_name = 'odt.cotizacion.digital'
 		
 	cotizacion_digital_id = fields.Many2one('odt.crm', ondelete='cascade')
-	concepto = fields.Char(string='Concepto               ')
+	concepto = fields.Char(string='Concepto')
 	cantidad = fields.Integer(string='Cantidad')
 	dias = fields.Integer(string='Dias')
 	precio_uni_cliente = fields.Float(string='Precio Unitario Cliente')
@@ -686,6 +661,86 @@ class CotizacionesDigital(models.Model):
 	costo_interno = fields.Float(string='*Costo Interno')
 	recuperacion = fields.Float(string='Costo minimo de recuperacion')
 
+class TipoGasto(models.Model):	
+	_name = 'odt.tipo.gasto'
+
+	name = fields.Char(string='Tipo de Gasto')
+
+class ColumnasSaleOrder(models.Model):
+	_inherit = 'sale.order.line'
+
+	tipo_gasto = fields.Many2one('project.gastos', string='Area de gatos')
+
+
+class Gastos(models.Model):
+	"""docstring for Gastos"""
+	_name = 'project.gastos'
+	
+	_sql_constraints = [('gasto_unique', 'unique (gastos_id,gastos)',     
+						'No puedes duplicar el tipo de gasto!')]
+
+	gastos_id = fields.Many2one('project.project')
+	gastos = fields.Selection([('1','BTL'),('2','Produccion'),('3','Diseño y Creatividad'),('4','Gestoria y logistica'),('5','Call Center'),('6','Digital'),('7','Medios')], string='Tipo Gasto')
+	odt_gastos = fields.Float(string='ODT gasto')
+	fac_gastos = fields.Float(string='Factura gasto')
+	disviacion = fields.Float(string='Desviacion')
+
+
+class TablaGastos(models.Model):
+	_inherit = 'project.project'
+
+
+	tabla_gastos = fields.One2many('project.gastos','gastos_id')
+	odt = fields.Many2one('odt.crm',string='ODT', domain="[('crm_odt_id.partner_id','=',partner_id)]")
+	ref_project = fields.Many2one('crm.lead',string='Proyecto', compute='get_sale_order_reference')
+	fin_clave = fields.Char(string='CLAVE')
+	u_bruta_p = fields.Float(string='U. Bruta P', compute='_compute_saldo_autorizado')
+	u_bruta_r = fields.Float(string='U. Bruta R')
+	dates = fields.Date(related='ref_project.date_deadline', string='Fecha')
+	ref_customer = fields.Many2one(related='partner_id', string='Cliente')
+	total_pagar = fields.Float(string='planificado', compute='get_sale_order_total')
+	saldo_autorizado = fields.Float(string='saldo autorizado', compute='_compute_saldo_autorizado')
+	btl = fields.Float(related='ref_project.btl', string='BTL')
+	produccion = fields.Float(related='ref_project.produccion',string='Produccion')
+	diseño_creatividad = fields.Float(related='ref_project.diseño_creatividad',string='Diseño y Creatividad ')
+	gestoria_logistica = fields.Float(related='ref_project.gestoria_logistica',string='Gestoria y Logistica')
+	call_center = fields.Float(related='ref_project.call_center',string='Call Center')
+	digital = fields.Float(related='ref_project.digital',string='Digital')
+	medios = fields.Float(related='ref_project.medios',string='Medios')
+
+    # @api.multi
+    # def get_productwise_commission(self):
+    #     sum_line_tipo_gasto = []
+    #     for order in self:
+    #         for line in order.sale_order_line:
+    #         	if self.sale_order_id.tipo_gasto 
+    #             sum_line_tipo_gasto.append((line.tipo_gasto * line.product_id.sales_manager_commission)/100)
+    #             sum_line_tipo_gasto.
+    #         amount_manager = sum(sum_line_manager)
+    #     return amount_person
+
+	@api.one
+	def get_sale_order_reference(self):
+		for rec in self:
+			res = rec.env['sale.order'].search([('id', '=', self.sale_order_id.id)], limit=1)
+			rec.ref_project = res.opportunity_id.id
+
+
+	@api.one
+	def get_sale_order_total(self):
+		for rec in self:
+			res = rec.env['sale.order'].search([('id', '=', self.sale_order_id.id)], limit=1)
+			rec.total_pagar = float(res.amount_total)
+
+
+# planificado es total a cobrar -los gastos autorizados
+	@api.one
+	@api.depends('ref_project','saldo_autorizado','u_bruta_p')
+	def _compute_saldo_autorizado(self):
+		if self.ref_project:
+			self.saldo_autorizado = (self.ref_project.btl + self.ref_project.produccion + self.ref_project.diseño_creatividad + self.ref_project.call_center + self.ref_project.digital + self.ref_project.medios)
+			self.u_bruta_p = (self.saldo_autorizado - self.total_pagar)
+	
 
 
 class marca_crm(models.Model):
@@ -741,6 +796,11 @@ class inventory(models.Model):
 
 	return_reason = fields.Char(string='Motivo de la Devolucion')
 	receive = fields.Char(string='Quien recibe')
+	folio_ganador = fields.Char(string='Folio consecutivo de ganador')
+	ejecutivo = fields.Many2one('res.partner', string='Ejecutivo Asignado')
+	promosion = fields.Char(string='promosion')
+
+
 
 class Flotilla(models.Model):
 

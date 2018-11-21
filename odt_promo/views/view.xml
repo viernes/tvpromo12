@@ -214,7 +214,6 @@
                                                   <group name="brief">
                                                       <field name="product"/>
                                                       <field name="project"/>
-                                                      <field name="project_name"/>
                                                       <field name="term_promo_date"/>
                                                       <field name="temporalidad"/>
                                                       <field name="slogan_marca"/>
@@ -333,7 +332,7 @@
                                 <page name="cotizacion_interna_btl" string="Cotizacion">
                                     <field name="tabla_cotizacion_btl" widget="one2many_list">
                                       <tree editable="bottom">
-                                          <field name="concepto" widget="monetary" />
+                                          <field name="concepto"/>
                                           <field name="cantidad"/>
                                           <field name="dias" />
                                           <field name="precio_uni_cliente" widget="monetary"/>
@@ -437,7 +436,7 @@
                                 <page name="cotizacion_interna_produ" string="Cotizacion">
                                     <field name="tabla_cotizacion_produccion" widget="one2many_list">
                                       <tree editable="bottom">
-                                          <field name="concepto" widget="monetary" />
+                                          <field name="concepto"/>
                                           <field name="cantidad"/>
                                           <field name="dias" />
                                           <field name="precio_uni_cliente" widget="monetary"/>
@@ -461,6 +460,7 @@
                               </group>
                               <group>
                                 <field name="produccion"/>
+                                  <field name="firma1" widget="signature"/>
                               </group>
                         </page>
 
@@ -507,7 +507,7 @@
                                 <page name="cotizacion_interna_diseno" string="Cotizacion">
                                     <field name="tabla_cotizacion_produccion" widget="one2many_list">
                                       <tree editable="bottom">
-                                          <field name="concepto" widget="monetary" />
+                                          <field name="concepto"  />
                                           <field name="cantidad"/>
                                           <field name="dias" />
                                           <field name="precio_uni_cliente" widget="monetary"/>
@@ -615,7 +615,7 @@
                                 <page name="cotizacion_interna_diseno" string="Cotizacion">
                                     <field name="tabla_cotizacion_gestoria" widget="one2many_list">
                                       <tree editable="bottom">
-                                          <field name="concepto" widget="monetary" />
+                                          <field name="concepto" />
                                           <field name="cantidad"/>
                                           <field name="dias" />
                                           <field name="precio_uni_cliente" widget="monetary"/>
@@ -645,7 +645,7 @@
 
                         <page name="callcenter" string="Call Center"  attrs="{'invisible': [('area','!=','5')]}">
                           <group>
-                            <group string="Ripo de servicio">
+                            <group string="Tipo de servicio">
                               <field name="cc_registro"/>
                               <field name="cc_atencion_promo"/>
                               <field name="cc_atencion"/>
@@ -694,7 +694,7 @@
                                 <page name="cotizacion_interna_diseno" string="Cotizacion">
                                     <field name="tabla_cotizacion_callcenter" widget="one2many_list">
                                       <tree editable="bottom">
-                                          <field name="concepto" widget="monetary" />
+                                          <field name="concepto"/>
                                           <field name="cantidad"/>
                                           <field name="dias" />
                                           <field name="precio_uni_cliente" widget="monetary"/>
@@ -720,12 +720,6 @@
                               <field name="digital"/>
                             </group>
                         </page>
-
-
-
-
-
-
 
                         <page name="digital" string="Digital"  attrs="{'invisible': [('area','!=','6')]}">
                           <group colspan="3" >
@@ -810,7 +804,7 @@
                                 <page name="cotizacion_interna_diseno" string="Cotizacion">
                                     <field name="tabla_cotizacion_digital" widget="one2many_list">
                                       <tree editable="bottom">
-                                          <field name="concepto" widget="monetary" />
+                                          <field name="concepto"/>
                                           <field name="cantidad"/>
                                           <field name="dias" />
                                           <field name="precio_uni_cliente" widget="monetary"/>
@@ -870,7 +864,6 @@
                           <group name="brief">
                               <field name="product"/>
                               <field name="project"/>
-                              <field name="project_name"/>
                               <field name="term_promo_date"/>
                               <field name="temporalidad"/>
                               <field name="slogan_marca"/>
@@ -1080,6 +1073,9 @@
                 <xpath expr="//field[@name='origin']" position="after">
                   <field name="return_reason" attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
                   <field name="receive" attrs="{'invisible': [('scheduled_date','=',False)], 'invisible': [('picking_type_code','=','incoming')]}"/>
+                  <field name='folio_ganador' attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
+                  <field name='ejecutivo' attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
+                  <field name='promosion' attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
                 </xpath>
               </field>
       </record>
@@ -1097,6 +1093,74 @@
                 </xpath>
               </field>
       </record>
+
+      <!-- Campos para tipos de Gatos -->
+
+      <record id="inherit_account_column" model="ir.ui.view">
+              <field name="name">inherit.account.column</field>
+              <field name="model">sale.order</field>
+              <field name="inherit_id" ref="sale.view_order_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree//field[@name='analytic_tag_ids']" position="after">
+                  <field name='tipo_gasto'/>
+                </xpath>
+              </field>
+      </record>
+
+      <record id="inherit_page_finanza_project" model="ir.ui.view">
+              <field name="name">inherit.finanza.page</field>
+              <field name="model">project.project</field>
+              <field name="inherit_id" ref="project.edit_project"/>
+              <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]//notebook[1]" position="inside">
+                  <page name="finanzas" string="Control Presupuestal">
+                    <group>
+                      <group>
+                        <field name='ref_project'/>
+                        <field name='odt'/>
+                        <field name='fin_clave'/>
+                        <field name='dates'/>
+                        <field name='ref_customer'/>
+                      </group>
+                      <group>
+                        <field name='u_bruta_p'/>
+                        <field name='u_bruta_r'/>
+                      </group>
+                      <group string='Gasto Aprovado'>
+                          <field name='btl'/>
+                          <field name='produccion'/>
+                          <field name='diseño_creatividad'/>
+                          <field name='gestoria_logistica'/>
+                          <field name='call_center'/>
+                          <field name='digital'/>
+                          <field name='medios'/>
+                      </group>
+                      <group name="ingresos" string='Ingresos'>
+                            <!-- <field name=""/> -->
+                            <field name="total_pagar" readonly="1"/>
+                      </group>
+                      <group string="Gastos">
+                            <page name="cotizacion_interna_diseno" string="Cotizacion">
+                                <field name="tabla_gastos" widget="one2many_list">
+                                  <tree editable="bottom">
+                                      <field name='gastos'/>
+                                      <field name='odt_gastos'/>
+                                      <field name='fac_gastos'/>
+                                      <field name='disviacion'/>
+                                  </tree>
+                                </field>
+                                <group>
+                                </group>
+                            </page> 
+                      </group>
+                    </group>
+                  </page>                  
+                </xpath>
+              </field>
+      </record>
+
+
+
     </data>
   </odoo>
 

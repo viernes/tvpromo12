@@ -6,7 +6,7 @@
     'category': 'Personalizacion',
     'author': 'xmarts',
     'website': 'www.xmarts.com',
-    'depends': ['base', 'contacts','hr','fleet','sale','crm','helpdesk','hr_expense'],
+    'depends': ['base', 'hr_attendance','contacts','hr','fleet','sale','crm','helpdesk','hr_expense','stock','project','hr_holidays','sale_management','timesheet_grid','account'],
     'data': ['views/view.xml',
              'reports/deliver_split.xml',
             ],
