@@ -798,8 +798,7 @@ class inventory(models.Model):
 	receive = fields.Char(string='Quien recibe')
 	folio_ganador = fields.Char(string='Folio consecutivo de ganador')
 	ejecutivo = fields.Many2one('res.partner', string='Ejecutivo Asignado')
-	promosion = fields.Char(string='promosion')
-
+	promosion = fields.Char(string='Promocion')
 
 
 class Flotilla(models.Model):
