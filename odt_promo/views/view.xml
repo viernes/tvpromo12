@@ -1074,8 +1074,10 @@
                   <field name="return_reason" attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
                   <field name="receive" attrs="{'invisible': [('scheduled_date','=',False)], 'invisible': [('picking_type_code','=','incoming')]}"/>
                   <field name='folio_ganador' attrs="{'invisible': [('picking_type_code','=','incoming')]}"/>
-                  <field name='ejecutivo' attrs="{'invisible': [('picking_type_code','=','incoming')]}"/>
                   <field name='promosion' attrs="{'invisible': [('picking_type_code','=','incoming')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='location_id']" position="after">
+                    <field name='ejecutivo' attrs="{'invisible': [('picking_type_code','=','incoming')]}"/>
                 </xpath>
               </field>
       </record>

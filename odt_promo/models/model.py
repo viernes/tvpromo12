@@ -797,7 +797,7 @@ class inventory(models.Model):
 	return_reason = fields.Char(string='Motivo de la Devolucion')
 	receive = fields.Char(string='Quien recibe')
 	folio_ganador = fields.Char(string='Folio consecutivo de ganador')
-	ejecutivo = fields.Many2one('res.partner', string='Ejecutivo Asignado')
+	ejecutivo = fields.Many2one('hr.employee', string='Ejecutivo Asignado')
 	promosion = fields.Char(string='Promocion')
 
 
