@@ -1,0 +1,1166 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+    <data>
+      <!-- Campos nuevos en la interface de CRM -->
+        <record id="inherit_fields_form" model="ir.ui.view">
+          <field name="name">inherit.fields.form</field>
+          <field name="model">crm.lead</field>
+          <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+              <field name="marca"/>
+              <field name="target"/>
+            </xpath>
+          </field>
+        </record>
+
+        <record id="inherit_name_page" model="ir.ui.view">
+          <field name="name">inherit.name.page</field>
+          <field name="model">crm.lead</field>
+          <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+          <field name="arch" type="xml">
+            <xpath expr="//form[1]/sheet[1]/notebook[1]//page[1]" position="attributes">
+              <attribute name="string">Mecanica</attribute>
+            </xpath>
+          </field>
+        </record>
+
+        <record id="invisible_planned" model="ir.ui.view">
+          <field name="name">inherit.invisible.planned</field>
+          <field name="model">crm.lead</field>
+          <field name="inherit_id" ref="crm.quick_create_opportunity_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='planned_revenue']" position="attributes">
+              <attribute name="invisible">1</attribute>
+            </xpath>
+          </field>
+        </record>
+
+
+      <!-- Domain para contador ODT -->    
+        <record id="action_odt_crm" model="ir.actions.act_window">
+                  <field name="name">ODT</field>
+                  <field name="res_model">odt.crm</field>
+                  <field name="view_mode">kanban,tree,form,graph,pivot</field>
+                  <field name="domain">[('crm_odt_id', '=', active_id)]</field>
+                  <field name="context">{'search_default_crm_odt_id': active_id, 'default_crm_odt_id': active_id}</field>
+        </record>
+      <!-- Domain para contador ODT -->
+
+      <!-- Vista Kanban -->
+        <record id="todo_task_kanban" model="ir.ui.view">
+        <field name="model">odt.crm</field>
+        <field name="arch" type="xml">
+          <kanban default_group_by="stage_id" class="o_kanban_small_column" >
+                  <field name="stage_id"/>
+                  <field name="color"/>
+                  <field name="kanban_state"/>
+                  <field name="priority"/>
+                  <field name="user_id"/>
+                  <progressbar field="kanban_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' help="This bar allows to filter the opportunities based on scheduled activities."/>
+                        <templates>
+                          <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click">
+                              <div class="o_dropdown_kanban dropdown">
+                                  <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                      <span class="fa fa-ellipsis-v"/>
+                                  </a>
+                                  <div class="dropdown-menu" role="menu">
+                                      <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                                      <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                      <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                  </div>
+                              </div>
+                              <div class="oe_kanban_content">
+                                   <div>
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                   </div>
+                                    <div>
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority"/>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="oe_clear">
+                            </div>
+                            </div>
+                          </t>
+                        </templates>
+            </kanban>
+          </field>
+        </record>
+
+<!-- End Vista Kanban -->
+
+<!-- Formulario para vista kanban -->
+
+      <record id="form_odt_crm" model="ir.ui.view">
+            <field name="name">odt.crm.lead.form</field>
+            <field name="model">odt.crm</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="ODT" class="o_opportunity_form">
+                  <header><field name="stage_id" widget="statusbar"
+                            options="{'clickable': '1', 'fold_field': 'fold'}"
+                            domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
+                            attrs="{'invisible': [('active', '=', False)]}"/></header>
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id"
+                                    string="Customer" domain="[('customer', '=', True)]"
+
+                                />
+                                <field name="is_blacklisted" invisible="1"/>
+                                <field name="partner_is_blacklisted" invisible="1"/>
+                                <label for="email_from" class="oe_inline"/>
+                                <div class="o_row o_row_readonly">
+                                    <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
+                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}" groups="base.group_user"></i>
+                                    <field name="email_from"
+                                       attrs="{'invisible': [('partner_address_email', '!=', False)]}"
+                                       string="Email"
+                                       widget="email"/>
+                                    <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
+                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}" groups="base.group_user"></i>
+                                    <field name="partner_address_email"
+                                       attrs="{'invisible': [('partner_address_email', '==', False)]}"
+                                       widget="email"
+                                       string="Email"/>
+                                </div>
+                                <field name="partner_address_phone"
+                                       attrs="{'invisible': [('partner_address_phone', '==', False)]}"
+                                       readonly="1"
+                                       widget="phone"
+                                       string="Phone"/>
+                                <field name="phone"
+                                       attrs="{'invisible': [('partner_address_phone', '!=', False)]}"
+                                       widget="phone"/>
+                            </group>
+
+                            <group>
+                                <field name="date_deadline"/>
+                            </group>
+
+                            <group>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'sales_team.group_sale_salesman_all_leads'], 'team_id': team_id}" domain="[('share', '=', False)]"/>
+                                <field name="team_id" widget="selection"/>
+                            </group>
+                            <group>
+                                <field name="priority" widget="priority"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                <field name="marca"/>
+                                <field name="target"/>
+                                <field name="area"/>
+                                <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
+                                <field name="date_conversion" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                        <page string="Internal Notes">
+                            <field name="description"/>
+                        </page>
+                        <page name="lead" string="Followup">
+                            <group>
+                                <group string="Initial Contact Information">
+                                    <field name="partner_name"/>
+                                    <label for="street" string="Address"/>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                </group>
+
+                                <group class="mt48">
+                                    <label for="contact_name"/>
+                                    <div class="o_row">
+                                        <field name="contact_name"/>
+                                        <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
+                                    </div>
+                                    <field name="function"/>
+                                    <field name="mobile"/>
+                                </group>
+                                <group string="Marketing">
+                                    <field name="campaign_id" />
+                                    <field name="medium_id" />
+                                    <field name="source_id" />
+                                </group>
+                                <group string="Misc" name="Misc">
+                                    <field name="day_open" groups="base.group_no_one"/>
+                                    <field name="day_close" groups="base.group_no_one"/>
+                                    <field name="referred"/>
+                                    <field name="type" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="brief" string="Brief">
+                                      <group name="left">
+                                                  <group name="brief">
+                                                      <field name="product"/>
+                                                      <field name="project"/>
+                                                      <field name="term_promo_date"/>
+                                                      <field name="temporalidad"/>
+                                                      <field name="slogan_marca"/>
+                                                      <field name="logo_marca"/>
+                                                  </group>
+                                                  <group name="reto_proyecto" string="Reto del Proyecto">
+                                                      <field name="rp_1" />
+                                                      <field name="rp_2" />
+                                                      <field name="rp_3" />
+                                                      <field name="rp_4" />
+                                                  </group>
+                                                  <group name="objetivo_negocio" string="Objetivo del Negocio">
+                                                      <field name="on_1" />
+                                                      <field name="on_2" />
+                                                      <field name="on_3" />
+                                                      <field name="on_4" />
+                                                  </group>
+                                                  <group name="objetivo_marca"  string="Objetivo de la Marca">
+                                                      <field name="ob_1" />
+                                                      <field name="ob_2" />
+                                                      <field name="ob_3" />
+                                                  </group>
+                                                  <group name="caracter_marca" string="Caracter de la Marca">
+                                                      <field name="cm_1" />
+                                                      <field name="cm_2" />
+                                                      <field name="cm_3" />
+                                                      <field name="cm_4" />
+                                                  </group>
+                                              </group>
+                                              <group name="right">
+                                                  <group name="competidores">
+                                                      <field name="qcs_1"/>
+                                                      <field name="qcs_2"/>
+                                                      <field name="qcs_3"/>
+                                                  </group>
+                                                  <group name="dialogo">
+                                                      <field name="vh_1"/>
+                                                      <field name="vh_2"/>
+                                                      <field name="vh_3"/>
+                                                  </group>
+                                                  <group name="comunicar">
+                                                      <field name="dc_1"/>
+                                                      <field name="dc_2"/>
+                                                      <field name="dc_3"/>
+                                                  </group>
+                                                  <group name="no_comunicar?">
+                                                      <field name="qc_1"/>
+                                                      <field name="qc_2"/>
+                                                  </group>  
+                                                  <group name="ccp">
+                                                    <field name="ccp_1"/>
+                                                    <field name="ccp_2"/>
+                                                  </group>
+                                                  <group name="quiz_11" string="¿CÓMO Y DÓNDEVAMOS A COMUNICAR EL PROYECTO?">
+                                                    <field name="cdp_1"/>
+                                                    <field name="cdp_2"/>
+                                                    <field name="cdp_3"/>
+                                                  </group>
+                                                  <group name="quiz_12">
+                                                     <fields name="qz_12"/>
+                                                     <field name="qz_13"/>
+                                                     <field name="qz_14"/>
+                                                     <field name="qz_15"/>
+                                                     <field name="qz_16"/>
+                                                  </group>
+                                          </group>
+                        </page>
+
+                        <page name="btl" string="BTL"  attrs="{'invisible': [('area','!=','1')]}" >
+                          <group>
+                                <group>
+                                  <h3>Activacion</h3>
+                                    <field name="personal"/>
+                                    <field name="coverage"/>
+                                </group>
+                                     <page name="mat_elabor" string="Material a Elaborar">
+                                        <field name="tabla_material_btl" widget="one2many_list">
+                                          <tree editable="bottom">
+                                              <field name = "tipo_material" />
+                                              <field name = "quantity" />
+                                              <field name = "medidas_formatos" />
+                                          </tree>
+                                          </field>
+                                          <field name="descrption" placeholder="Descripcion"/>
+                                    </page>
+                                <group string="Tipo de solicitud">
+                                    <field name="activation"/>
+                                    <field name="mystery_shopper"/>
+                                    <field name="promotoria" />
+                                    <field name="sumpling"/>
+                                    <field name="production_material"/>
+                                    <field name="production_promocionales"/>
+                                </group>
+                              
+                              <group>
+                                <h3>Puntos de Venta</h3>
+                                <field name="vigencia"/>
+                                <field name="activ_days"/>
+                                <field name="auto_servicio"/>
+                                <field name="departament"/>
+                                <field name="centro_comercial"/>
+                                <field name="calle"/>
+                                <field name="otros"/>
+                                <field name="others" attrs="{'invisible': [('otros','!=',True)]}"/>
+                                <field name="listado_tiendas" />
+                                <field name="material_apoyo"/>
+                                <field name="comentarios_add"/>
+                              </group>                                
+                              <br/>
+                              <h3>Cotizacion</h3>
+                              <br/>
+                          </group>
+                          <br/>
+                              <group>
+                                <field name="propiedad"/>
+                                <page name="cotizacion_interna_btl" string="Cotizacion">
+                                    <field name="tabla_cotizacion_btl" widget="one2many_list">
+                                      <tree editable="bottom">
+                                          <field name="concepto"/>
+                                          <field name="cantidad"/>
+                                          <field name="dias" />
+                                          <field name="precio_uni_cliente" widget="monetary"/>
+                                          <field name="costo_cliente" widget="monetary" />
+                                          <field name="precio_uni_gtvp" widget="monetary" />
+                                          <field name="pago_terceros" widget="monetary"/>
+                                          <field name="costo_interno" widget="monetary"/>
+                                          <field name="recuperacion" widget="monetary"/>
+                                      </tree>
+                                    </field>
+                                    <group>
+                                      <group class="oe_subtotal_footer oe_right" name="totales">
+                                        <field name="total_cliente_btl" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_gtvo_btl" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_terceros_btl" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_interno_btl" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_recuperacion_btl" class="oe_subtotal_footer_separator" readonly="1"/>
+                                      </group>
+                                    </group>
+                                </page>
+                                <group>
+                                  <field name="btl"/>
+                                </group>
+                              </group>
+                        </page>
+
+                        <page name="production" string="Produccion"  attrs="{'invisible': [('area','!=','2')]}">
+                          <group>
+                            <group>
+                                <h3>Tipo de Solicitud</h3>
+                                <field name="p_radio"/>
+                                <field name="p_tv"/>
+                                <field name="p_internet"/>
+                                <field name="p_spot"/>
+                                <field name="p_video"/>
+                                <field name="p_cpsula"/>
+                              </group>
+                              <group>
+                                <field name="p_jingle"/>
+                                <field name="p_corporativo"/>
+                                <field name="p_grafico"/>
+                                <field name="p_soper"/>
+                                <field name="p_otro"/>
+                                <field name="duracion"/>
+                              </group>
+                                 <field name="p_descripcion" placeholder="Descripcion"/>
+                              <group>
+                              <h3>Realizacion</h3>
+                                <field name="conduccion"/>
+                                <field name="voz"/>
+                                <field name="equipo_grabacion"/>
+                                <field name="equipo_audio"/>
+                                <field name="locaci"/>
+                                <field name="foro"/>
+                              </group>
+                              <group>
+                                <field name="blue_green"/>
+                                <field name="linea"/>
+                                <field name="escaleta"/>
+                                <field name="fotografia"/>
+                                <field name="maquillaje"/>
+                                <field name="p_otros"/>
+                                <field name="otro_descripcion2" attrs="{'invisible': [('p_otros','=',False)]}"/>
+                              </group>
+                              <group>
+                                <h3>Servicio post</h3>
+                                <field name="edicion"/>
+                                <field name="musicalizacion"/>
+                                <field name="special_efects_2d"/>
+                                <field name="special_efects_3d"/>
+                                <field name="grafics_2D"/>
+                                <field name="gradic_3D"/>
+                              </group>                                
+                              <group>
+                                <field name="presu_asignado"/>
+                                <field name="presu_libre"/>
+                              </group>
+                                  <page name="mat_elabor" string="Material a Elaborar">
+                                      <field name="tabla_material_produccion" widget="one2many_list">
+                                        <tree editable="bottom">
+                                            <field name = "tipo_material" />
+                                            <field name = "medidas_formatos" />
+                                        </tree>
+                                        </field>
+                                  </page>
+                              <group>
+                                <field name="p_comments"/>
+                                <field name="p_fotos"/>
+                                <field name="p_logotipo"/>
+                                <field name="p_producto"/>
+                                <field name="p_impresos"/>
+                                <field name="p_video"/>
+                                <field name="cye_otros"/>
+                                <field name="com_otros" attrs="{'invisible': [('cye_otros','=',False)]}"/>
+                              </group>
+                          </group>
+                              <br/>
+                              <h3>Cotizacion</h3>
+                              <br/>
+                              <group>
+                                <page name="cotizacion_interna_produ" string="Cotizacion">
+                                    <field name="tabla_cotizacion_produccion" widget="one2many_list">
+                                      <tree editable="bottom">
+                                          <field name="concepto"/>
+                                          <field name="cantidad"/>
+                                          <field name="dias" />
+                                          <field name="precio_uni_cliente" widget="monetary"/>
+                                          <field name="costo_cliente" widget="monetary" />
+                                          <field name="precio_uni_gtvp" widget="monetary" />
+                                          <field name="pago_terceros" widget="monetary"/>
+                                          <field name="costo_interno" widget="monetary"/>
+                                          <field name="recuperacion" widget="monetary"/>
+                                      </tree>
+                                    </field>
+                                    <group>
+                                      <group class="oe_subtotal_footer oe_right" name="totales">
+                                        <field name="total_cliente_produ" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_gtvo_produ" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_terceros_produ" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_interno_produ" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_recuperacion_produ" class="oe_subtotal_footer_separator" readonly="1"/>
+                                      </group>
+                                    </group>
+                                </page>
+                              </group>
+                              <group>
+                                <field name="produccion"/>
+                                  <field name="firma1" widget="signature"/>
+                              </group>
+                        </page>
+
+                        <page name="desing" string="Diseno y Creatividad"  attrs="{'invisible': [('area','!=','3')]}">
+                          <group>
+                            <group>
+                              <h3>Tipo de solicitud</h3>
+                              <field name="creativity_360"/>
+                              <field name="creativity"/>
+                              <field name="master_graph"/>
+                              <field name="material_pop"/>
+                              <field name="template"/>
+                            </group>
+                            <group>
+                              <field name="diseno_presentacion"/>
+                              <field name="concepto"/>
+                              <field name="banners"/>
+                              <field name="dc_otros"/>
+                              <field name="dc_otros_text" attrs="{'invisible': [('dc_otros','=',False)]}"/>
+                            </group>
+                              <h3>Material a elaborar</h3><br/>
+                              <page name="mat_elabor" string="Material a Elaborar">
+                                  <field name="tabla_material_diseno" widget="one2many_list">
+                                    <tree editable="bottom">
+                                        <field name = "tipo_material" />
+                                        <field name = "medidas_formatos" />
+                                    </tree>
+                                    </field>
+                              </page>                               
+                            <field name="dc_especificacion" placeholder="Comentarios y especificaciones"/>
+                            <group>
+                              <h3>Materiales Proporcionados</h3>
+                              <field name="d_fotos"/>
+                              <field name="d_logotipo"/>
+                              <field name="d_presentacion"/>
+                              <field name="d_impresos"/>
+                              <field name="d_guidlines"/>
+                              <field name="d_referencias"/>
+                              <field name="d_otros"/>
+                              <field name="d_comments"/>
+                            </group>
+                          </group>
+                            <group>
+                                <page name="cotizacion_interna_diseno" string="Cotizacion">
+                                    <field name="tabla_cotizacion_produccion" widget="one2many_list">
+                                      <tree editable="bottom">
+                                          <field name="concepto"  />
+                                          <field name="cantidad"/>
+                                          <field name="dias" />
+                                          <field name="precio_uni_cliente" widget="monetary"/>
+                                          <field name="costo_cliente" widget="monetary" />
+                                          <field name="precio_uni_gtvp" widget="monetary" />
+                                          <field name="pago_terceros" widget="monetary"/>
+                                          <field name="costo_interno" widget="monetary"/>
+                                          <field name="recuperacion" widget="monetary"/>
+                                      </tree>
+                                    </field>
+                                    <group>
+                                      <group class="oe_subtotal_footer oe_right" name="totales">
+                                        <field name="total_cliente_diseno" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_gtvo_diseno" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_terceros_diseno" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_interno_diseno" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_recuperacion_diseno" class="oe_subtotal_footer_separator" readonly="1"/>
+                                      </group>
+                                    </group>
+                                </page>
+                            </group> 
+                            <group>
+                              <field name="diseño_creatividad"/>
+                            </group>
+                        </page>
+                        
+
+                        <page name="logistica" string="Gestoria y Logistica"  attrs="{'invisible': [('area','!=','4')]}">
+                          <group>
+                            <group string="Sorteo">
+                                <field name="gl_date_sorteo"/>
+                                <field name="site_sorteo"/>
+                                <field name="description_premio"/>
+                                <field name="description_by_premio"/>
+                                <field name="valor_primio"/>
+                                <field name="lugar_enterga_premio"/>
+                                <field name="dates_hrs_entrega"/>
+                                <field name="responsable_promo"/>
+                                <field name="dl_comments"/>                              
+                            </group>
+                            <group string="Concurso">
+                                <field name="clave_proyecto"/>
+                                <field name="social_reason"/>
+                                <field name="respons_promocion"/>
+                                <field name="respons_trato_personal"/>
+                                <field name="name_promo"/>
+                                <field name="geo_cobertura"/>
+                                <field name="vigencia_promo"/>
+                            </group>
+                            <group string="Tipo de Promocion">
+                                <field name="dl_sorteo"/>
+                                <field name="gl_concurso"/>
+                                <field name="gr_rtc"/>
+                            </group>
+                            <group>
+                                <field name="gl_canje"/>
+                                <field name="gl_otra"/>
+                            </group>
+                            <group string="Sorteo">
+                                <field name="gl_vigencia_permiso"/>
+                                <h4>Modalidad: </h4>
+                                <field name="gl_talon_boleto"/>
+                                <field name="gl_electr_boleto"/>
+                                <field name="gl_formacion_num"/>
+                            </group>
+                            <group>
+                                <field name="gl_sistema_info"/>
+                                <field name="gl_sorteo_insta"/>
+                            </group>
+                            <group string="Concurso">
+                                <field name="gl_cal_gana"/>
+                                <field name="gl_predeterminado"/>
+                                <field name="gl_juego_linea"/>
+                                <field name="gl_mayor_puntaje"/>
+                                <field name="gl_con_otro"/>
+                            </group>
+                            <group string="Contratacion de Servicios Notariales">
+                              <field name='cert_foios'/>
+                              <field name='det_ganadores'/>
+                              <field name='entrega_premio'/>
+                            </group>
+                            <group>                          
+                                <field name="gl_description_premio"/>
+                                <field name="gl_mecanica"/>
+                                <field name="gl_date_sorteo"/>
+                            </group>
+                            <group string="Preiodicos para publicar ganadores (sorteo)">
+                              <field name="universal"/>
+                              <field name="excelsior"/>
+                              <field name="novedades"/>
+                              <field name="la_prensa"/>
+                              <field name="el_record"/>
+                              <field name="publimetro"/>
+                              <field name="esto"/>
+                              <field name="jornada"/>
+                              <field name="gl_preiodico_otros"/>
+                            </group>
+                            <group>
+                              <field name="pagina_web"/>
+                              <field name="extra"/>
+                              <field name="gl_observations"/>
+                            </group>
+                          </group>
+                            <group>
+                                <page name="cotizacion_interna_diseno" string="Cotizacion">
+                                    <field name="tabla_cotizacion_gestoria" widget="one2many_list">
+                                      <tree editable="bottom">
+                                          <field name="concepto" />
+                                          <field name="cantidad"/>
+                                          <field name="dias" />
+                                          <field name="precio_uni_cliente" widget="monetary"/>
+                                          <field name="costo_cliente" widget="monetary" />
+                                          <field name="precio_uni_gtvp" widget="monetary" />
+                                          <field name="pago_terceros" widget="monetary"/>
+                                          <field name="costo_interno" widget="monetary"/>
+                                          <field name="recuperacion" widget="monetary"/>
+                                      </tree>
+                                    </field>
+                                    <group>
+                                      <group class="oe_subtotal_footer oe_right" name="totales">
+                                        <field name="total_cliente_gestoria" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_gtvo_gestoria" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_terceros_gestoria" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_interno_gestoria" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_recuperacion_gestoria" class="oe_subtotal_footer_separator" readonly="1"/>
+                                      </group>
+                                    </group>
+                                </page> 
+                            </group>
+                            <group>
+                              <field name="gestoria_logistica"/>
+                            </group>
+                        </page>
+
+
+                        <page name="callcenter" string="Call Center"  attrs="{'invisible': [('area','!=','5')]}">
+                          <group>
+                            <group string="Tipo de servicio">
+                              <field name="cc_registro"/>
+                              <field name="cc_atencion_promo"/>
+                              <field name="cc_atencion"/>
+                              <field name="cc_otro"/>
+                              <field name="cc_otro_des" attrs="{'invisible': [('cc_otro','=',False)]}"/>
+                            </group>
+                            <group>
+                              <h4>Dias de atencion</h4>
+                              <field name="cc_day_1"/>
+                              <field name="cc_day_2"/>
+                              <field name="cc_day_3"/>
+                              <field name="cc_day_4"/>
+                              <field name="cc_day_5"/>
+                              <field name="cc_day_6"/>
+                              <field name="cc_day_7"/>
+                              <field name="cc_hr_service"/>
+                            </group>
+                            <group>
+                              <field name="phone_number" widget="radio" options="{'horizontal': true}"/>
+                              <field name="phone_number_used"/>
+                              <field name="numero_estacion"/>
+                            </group>
+                            <br/>
+
+                            <h3>IVR</h3>
+                            <field name="ivr" placeholder="Desarrollo e implementacion IVR"/>
+                            <br/>
+                                <div class="text-muted" align="justify">
+                                      (Interactive Voice Resposne)
+                                      (Respuesta de Voz Interactiva)
+                                      Sistema automatico por medio del cual se atienden las llamadas telefonicas, utilizando grabaciones de voz para recibir y solicitar informacion de quien se comunica a traves del teclado del telefono.
+                                </div>
+                            <br/>
+                            <group>
+                              <field name="descp_ivr"/>
+                              <field name="cc_add_comments"/>
+                            </group>
+                            <br/>
+                            <group string="Recomendaciones de campaña">
+                              <field name="cc_medio_registro"/>
+                              <field name="cc_referencia_registro"/>
+                              <field name="cc_comentarios"/>
+                            </group> 
+                          </group>
+                            <group>
+                                <page name="cotizacion_interna_diseno" string="Cotizacion">
+                                    <field name="tabla_cotizacion_callcenter" widget="one2many_list">
+                                      <tree editable="bottom">
+                                          <field name="concepto"/>
+                                          <field name="cantidad"/>
+                                          <field name="dias" />
+                                          <field name="precio_uni_cliente" widget="monetary"/>
+                                          <field name="costo_cliente" widget="monetary" />
+                                          <field name="precio_uni_gtvp" widget="monetary" />
+                                          <field name="pago_terceros" widget="monetary"/>
+                                          <field name="costo_interno" widget="monetary"/>
+                                          <field name="recuperacion" widget="monetary"/>
+                                      </tree>
+                                    </field>
+                                    <group>
+                                      <group class="oe_subtotal_footer oe_right" name="totales">
+                                        <field name="total_cliente_callcenter" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_gtvo_callcenter" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_terceros_callcenter" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_interno_callcenter" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_recuperacion_callcenter" class="oe_subtotal_footer_separator" readonly="1"/>
+                                      </group>
+                                    </group>
+                                </page> 
+                            </group>
+                            <group>
+                              <field name="digital"/>
+                            </group>
+                        </page>
+
+                        <page name="digital" string="Digital"  attrs="{'invisible': [('area','!=','6')]}">
+                          <group colspan="3" >
+                            <group string="Tipo de solicitud">
+                              <field name="dg_web"/>
+                              <field name="dg_aplications"/>
+                              <field name="dg_social_net"/>
+                              <field name="dg_pautadg"/>
+                              <field name="dg_promoweb"/>
+                              <field name="dg_estrategi"/>
+                            </group>
+                            <group string="Pagina Web" >
+                              <group>
+                                <field name="dg_mantenimiento"/>
+                                <field name="dg_galeria"/>
+                                <field name="dg_camara"/>
+                                <field name="dg_calendar"/>
+                                <field name="dg_otro"/>
+                                <field name="dg_otro_detalle" attrs="{'invisible': [('dg_otro','=',False)]}"/>
+                              </group>
+                              <group>
+                                <field name="dg_sistema_votacion"/>
+                                <field name="dg_registro"/>
+                                <field name="dg_newsletter"/>
+                                <field name="dg_trivias"/>
+                                <field name="dg_aplications_realtime"/>
+                              </group>
+                            </group>
+                            <group string="Video Juegos / Aplicaciones">
+                              <field name="dg_descripcion_va"/>
+                              <field name="n_niveles"/>
+                              <field name="dg_opt_1" />
+                              <field name="dg_opt_2" />
+                              <field name="dg_opt_3" />
+                              <field name="dg_opt_4" />
+                              <field name="dg_opt_5" />
+                              <field name="dg_opt_6" />
+                            </group>
+                            <group string="Redes Sociales">
+                              <field name="dg_opt_7"/>
+                              <field name="dg_opt_8"/>
+                              <field name="dg_opt_9"/>
+                              <field name="dg_opt_10"/>
+                              <field name="dg_opt_11"/>
+                              <field name="dg_opt_12"/>
+                              <field name="dg_opt_13"/>
+                              <field name="dg_opt_14"/>
+                              <field name="dg_propuesta"/>
+                            </group>
+                            <group string="Pauta Digital">
+                              <field name="dg_presupuesto"/>
+                              <field name="dg_objetivos"/>
+                              <field name="dg_alcance"/>
+                              <field name="dg_banner"/>
+                              <field name="dg_observations"/>
+                            </group>
+                            <group string="Promoweb">
+                              <field name="dg_opt_15"/>
+                              <field name="dg_opt_16"/>
+                              <field name="dg_opt_17"/>
+                              <field name="dg_opt_18"/>
+                              <field name="dg_opt_19"/>
+                            </group>
+                            <group string="Subcontrataciones">
+                              <field name="dg_opt_20"/>
+                              <field name="dg_opt_21"/>
+                              <field name="dg_opt_22"/>
+                              <field name="dg_sub_detalle" attrs="{'invisible': [('dg_opt_22','=',False)]}" />
+                            </group>
+                            <group string="Extras">
+                              <field name="dg_opt_23"/>
+                              <field name="dg_opt_24"/>
+                              <field name="dg_cant_codigos"/>
+                              <field name="dg_cant_digitos"/>
+                              <field name="dg_opt_25"/>
+                              <field name="dg_opt_26"/>
+                              <field name="dg_otros"/>
+                            </group>
+                          </group>
+                        
+                            <group>
+                                <page name="cotizacion_interna_diseno" string="Cotizacion">
+                                    <field name="tabla_cotizacion_digital" widget="one2many_list">
+                                      <tree editable="bottom">
+                                          <field name="concepto"/>
+                                          <field name="cantidad"/>
+                                          <field name="dias" />
+                                          <field name="precio_uni_cliente" widget="monetary"/>
+                                          <field name="costo_cliente" widget="monetary" />
+                                          <field name="precio_uni_gtvp" widget="monetary" />
+                                          <field name="pago_terceros" widget="monetary"/>
+                                          <field name="costo_interno" widget="monetary"/>
+                                          <field name="recuperacion" widget="monetary"/>
+                                      </tree>
+                                    </field>
+                                    <group>
+                                      <group class="oe_subtotal_footer oe_right" name="totales">
+                                        <field name="total_cliente_digital" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_gtvo_digital" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_terceros_digital" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_interno_digital" class="oe_subtotal_footer_separator" readonly="1"/>
+                                        <field name="total_recuperacion_digital" class="oe_subtotal_footer_separator" readonly="1"/>
+                                      </group>
+                                    </group>
+                                </page> 
+                            </group>
+                        </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+<!-- Boton stat info para ODT -->
+      
+      <record id="inherit_button_box" model="ir.ui.view">
+        <field name="name">inherit.button.box</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+          <xpath expr="//div[@class='oe_button_box']" position="inside">
+                <button class="oe_stat_button" icon="fa-list" name="%(action_odt_crm)d" type="action">
+                      <field name="odt_count" widget="statinfo" string="ODT"/>
+               </button>
+          </xpath>
+          <xpath expr="//form[1]/sheet[1]//h2[1]" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+        </field>
+      </record>
+
+<!-- Boton stat info parar ODT -->     
+
+      <record id="inherit_page" model="ir.ui.view">
+        <field name="name">inherit.page</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+            <page name="brief" string="Brief">
+              <group name="left">
+                          <group name="brief">
+                              <field name="product"/>
+                              <field name="project"/>
+                              <field name="term_promo_date"/>
+                              <field name="temporalidad"/>
+                              <field name="slogan_marca"/>
+                              <field name="logo_marca"/>
+                          </group>
+                          <group name="reto_proyecto" string="Reto del Proyecto">
+                              <field name="rp_1" />
+                              <field name="rp_2" />
+                              <field name="rp_3" />
+                              <field name="rp_4" />
+                          </group>
+                          <group name="objetivo_negocio" string="Objetivo del Negocio">
+                              <field name="on_1" />
+                              <field name="on_2" />
+                              <field name="on_3" />
+                              <field name="on_4" />
+                          </group>
+                          <group name="objetivo_marca"  string="Objetivo de la Marca">
+                              <field name="ob_1" />
+                              <field name="ob_2" />
+                              <field name="ob_3" />
+                          </group>
+                          <group name="caracter_marca" string="Caracter de la Marca">
+                              <field name="cm_1" />
+                              <field name="cm_2" />
+                              <field name="cm_3" />
+                              <field name="cm_4" />
+                          </group>
+                      </group>
+                      <group name="right">
+                          <group name="competidores">
+                              <field name="qcs_1"/>
+                              <field name="qcs_2"/>
+                              <field name="qcs_3"/>
+                          </group>
+                          <group name="dialogo">
+                              <field name="vh_1"/>
+                              <field name="vh_2"/>
+                              <field name="vh_3"/>
+                          </group>
+                          <group name="comunicar">
+                              <field name="dc_1"/>
+                              <field name="dc_2"/>
+                              <field name="dc_3"/>
+                          </group>
+                          <group name="no_comunicar?">
+                              <field name="qc_1"/>
+                              <field name="qc_2"/>
+                          </group>  
+                          <group name="ccp">
+                            <field name="ccp_1"/>
+                            <field name="ccp_2"/>
+                          </group>
+                          <group name="quiz_11" string="¿CÓMO Y DÓNDEVAMOS A COMUNICAR EL PROYECTO?">
+                            <field name="cdp_1"/>
+                            <field name="cdp_2"/>
+                            <field name="cdp_3"/>
+                          </group>
+                          <group name="quiz_12">
+                             <field name="qz_12"/>
+                             <field name="qz_13"/>
+                             <field name="qz_14"/>
+                             <field name="qz_15"/>
+                             <field name="qz_16"/>
+                          </group>
+                  </group>
+            </page>
+            <page name="montos" string="Presupuesto Autorizado">
+              <group string="Presupuestos por areas">
+                            <field name="btl" />
+                            <field name="produccion" />
+                            <field name="diseño_creatividad" />
+                            <field name="gestoria_logistica" />
+                            <field name="call_center"/>
+                            <field name="digital"/>
+                            <field name="medios"/>
+              </group>
+            </page>
+
+          </xpath>
+        </field>
+      </record>
+      <!-- Agrega campo minutos al helpdesk en sla, nota* eliminar los nombres de campos en vista -->
+     
+      <record id="inherit_invisible_field" model="ir.ui.view">
+              <field name="name">inherit.invisible.field</field>
+              <field name="model">helpdesk.sla</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='time_days']" position="attributes">
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='time_hours']" position="before">
+                 <field name="time_minutes" class="oe_inline"/> minutes<br/> 
+                </xpath>
+              </field>
+      </record>
+     
+<!--       campos de clasificaciones para etiquetas por area -->
+
+      <record id="inherit_clasificacion" model="ir.ui.view">
+              <field name="name">inherit.clasificacion.field</field>
+              <field name="model">helpdesk.ticket</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                 <field name="clasi_mantenimiento" /> 
+                </xpath>
+              </field>
+      </record>
+
+
+      <record id="inherit_clasificacion" model="ir.ui.view">
+              <field name="name">inherit.clasificacion.field</field>
+              <field name="model">helpdesk.ticket</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                 <field name="clasi_mantenimiento" attrs="{'invisible': [('alias_check','!=',1)]}"/>
+                 <field name="clasi_sistemas" attrs="{'invisible': [('alias_check','!=',3)]} "/>
+                 <field name="alias_check" invisible='1'/> 
+                 <field name="others" attrs="{'invisible': [('clasi_mantenimiento','!=',8)]} "/>
+                </xpath>
+              </field>
+      </record>
+
+       <!-- Campo selection para comparar las clasificaciones por area -->
+
+      <record id="inherit_clasificacio_team" model="ir.ui.view">
+              <field name="name">inherit.clasificacion.team</field>
+              <field name="model">helpdesk.team</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                 <field name="class_id" /> 
+                </xpath>
+              </field>
+      </record>
+
+      <!-- Campos flotilla -->
+      <record id="inherit_fields_flotilla" model="ir.ui.view">
+              <field name="name">inherit.fields.flotilla</field>
+              <field name="model">fleet.vehicle</field>
+              <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='residual_value']" position="after">
+                 <field name="date_emision_tc" /> 
+                 <field name="date_vencimiento_tc" />
+                 <field name="date_verificacion" />
+                 <field name="reason" attrs="{'invisible': [('active','=',True)]}"/>
+                 <field name="comments" attrs="{'invisible': [('active','=',True)]}"/>
+                 <field name="next_km"/>
+                 <field name="next_service"/>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                 <field name="compania_seguro" />
+                 <field name="no_poliza"/>
+                 <field name="start_date" />
+                 <field name="end_date" /> 
+                </xpath>
+
+              </field>
+      </record>
+      
+
+     
+      <record id="inherit_fields_flotilla_tree" model="ir.ui.view">
+              <field name="name">inherit.fields.flotilla.tree</field>
+              <field name="model">fleet.vehicle</field>
+              <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                 <field name="no_poliza"/>
+                 <field name="next_km"/>
+                 <field name="next_service"/>
+                </xpath>
+              </field>
+      </record>
+
+
+      <record id="inherit_field" model="ir.ui.view">
+              <field name="name">inherit.field</field>
+              <field name="model">hr.expense.sheet</field>
+              <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]/group[1]" position="inside">
+                  <group>
+                    <field name="delivery_amount" />
+                    <field name="prove_amount" />
+                    <field name="returned" />
+                    <field name="diferencia" />
+                  </group>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="approved" />
+                </xpath>
+              </field>
+      </record>
+
+      <!-- Campos para el stock picking o Inventario -->
+
+      <record id="inherit_inventary_field" model="ir.ui.view">
+              <field name="name">inherit.inventary.field</field>
+              <field name="model">stock.picking</field>
+              <field name="inherit_id" ref="stock.view_picking_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                  <field name="return_reason" attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
+                  <field name="receive" attrs="{'invisible': [('scheduled_date','=',False)], 'invisible': [('picking_type_code','=','incoming')]}"/>
+                  <field name='folio_ganador' attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
+                  <field name='ejecutivo' attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
+                  <field name='promosion' attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
+                </xpath>
+              </field>
+      </record>
+
+      <record id="inherit_invisible_field_leaves" model="ir.ui.view">
+              <field name="name">inherit.invisible.field.leaves</field>
+              <field name="model">hr.leave</field>
+              <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='request_unit_half']" position="attributes">
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//label[@for='request_unit_half']" position="attributes">
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+              </field>
+      </record>
+
+      <!-- Campos para tipos de Gatos -->
+
+      <record id="inherit_account_column" model="ir.ui.view">
+              <field name="name">inherit.account.column</field>
+              <field name="model">sale.order</field>
+              <field name="inherit_id" ref="sale.view_order_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree//field[@name='analytic_tag_ids']" position="after">
+                  <field name='tipo_gasto'/>
+                </xpath>
+              </field>
+      </record>
+
+      <record id="inherit_page_finanza_project" model="ir.ui.view">
+              <field name="name">inherit.finanza.page</field>
+              <field name="model">project.project</field>
+              <field name="inherit_id" ref="project.edit_project"/>
+              <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]//notebook[1]" position="inside">
+                  <page name="finanzas" string="Control Presupuestal">
+                    <group>
+                      <group>
+                        <field name='ref_project'/>
+                        <field name='odt'/>
+                        <field name='fin_clave'/>
+                        <field name='dates'/>
+                        <field name='ref_customer'/>
+                      </group>
+                      <group>
+                        <field name='u_bruta_p'/>
+                        <field name='u_bruta_r'/>
+                      </group>
+                      <group string='Gasto Aprovado'>
+                          <field name='btl'/>
+                          <field name='produccion'/>
+                          <field name='diseño_creatividad'/>
+                          <field name='gestoria_logistica'/>
+                          <field name='call_center'/>
+                          <field name='digital'/>
+                          <field name='medios'/>
+                      </group>
+                      <group name="ingresos" string='Ingresos'>
+                            <!-- <field name=""/> -->
+                            <field name="total_pagar" readonly="1"/>
+                      </group>
+                      <group string="Gastos">
+                            <page name="cotizacion_interna_diseno" string="Cotizacion">
+                                <field name="tabla_gastos" widget="one2many_list">
+                                  <tree editable="bottom">
+                                      <field name='gastos'/>
+                                      <field name='odt_gastos'/>
+                                      <field name='fac_gastos'/>
+                                      <field name='disviacion'/>
+                                  </tree>
+                                </field>
+                                <group>
+                                </group>
+                            </page> 
+                      </group>
+                    </group>
+                  </page>                  
+                </xpath>
+              </field>
+      </record>
+
+
+
+    </data>
+  </odoo>
+
