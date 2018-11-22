@@ -25,17 +25,20 @@ class PartnerAttendance(models.Model):
     _name = "res.partner.attendance"
     _description = "Partner Attendance"
 
-    name = fields.Char(string='Reference', required=True, copy=False, readonly=True, default='New')
-    state = fields.Selection([('inside','Inside'),('outside','Outside')], default='inside')
+    name = fields.Char(string='Visitante', required=True, copy=False, readonly=True, default='New')
+    state = fields.Selection([('inside','Entrada'),('outside','Salida')], default='inside')
     partner_id = fields.Many2one('res.partner', string="Partner", required=True, ondelete='cascade', index=True)
-    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True)
-    check_out = fields.Datetime(string="Check Out")
-    employee_id = fields.Many2one("hr.employee", string="What employee do you visit?")
-    photo_partner = fields.Binary(string="Visitor photo")
-    photo_equipment = fields.Binary(string="Equipment photo")
-    provider_id = fields.Many2one("res.partner",related="partner_id.parent_id",string="What provider is it?")
-    subject = fields.Char(string="Subject")
-    ticket_number = fields.Char(string="Ticket number", required=True)
+    check_in = fields.Datetime(string="Ingreso", default=fields.Datetime.now, required=True)
+    check_out = fields.Datetime(string="Salida")
+    employee_id = fields.Many2one("hr.employee", string="¿A quien visita?")
+    photo_partner = fields.Binary(string="Foto Contacto")
+    photo_equipment = fields.Binary(string="Foto Equipo")
+    provider_id = fields.Many2one("res.partner",related="partner_id.parent_id",string="Empresa")
+    subject = fields.Char(string="Asunto")
+    ticket_number = fields.Char(string="No. Gafete", required=True)
+    id_photo = fields.Binary(string="Identificacion")
+    placas = fields.Binary(string='Matricula')
+    comentario = fields.Text(string='Comentarios')
 
     @api.model
     def create(self, vals):

@@ -27,8 +27,11 @@
                     <group>
                         <field name="subject"/>
                         <field name="ticket_number"/>
+                        <field name='id_photo'/>
+                        <field name='placas'/>
                         <field name="photo_partner"/>
                         <field name="photo_equipment"/>
+                        <field name='comentario'/>
                     </group>
                   </group>
                 </sheet>
