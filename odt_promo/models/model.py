@@ -785,10 +785,19 @@ class expensesfields(models.Model):
 	returned = fields.Monetary(string='Devuelto')
 	diferencia = fields.Monetary(string='Diferencia', compute="_total_mejoras")
 	approved = fields.Boolean(string='Aprovado')
+	tipo_gasto = fields.Selection([('1','BTL'),('2','Produccion'),('3','Diseño'),('4','Gestoria'),('5','Contact Center'),('6','Marketing Digital'),('7','Medios'),('8','logistica'),('9','Estrategia')], string='Area')
 
 	@api.depends('prove_amount','returned','diferencia','delivery_amount')
 	def _total_mejoras(self):
 	    self.diferencia = (float(self.delivery_amount)) - (float(self.prove_amount)) - (float(self.returned))
+
+class Reembolso(models.Model):
+	"""docstring for Reembolso"""
+	_inherit = 'hr.expense'
+
+	tipo_gasto = fields.Selection([('1','BTL'),('2','Produccion'),('3','Diseño'),('4','Gestoria'),('5','Contact Center'),('6','Marketing Digital'),('7','Medios'),('8','logistica'),('9','Estrategia')], string='Tipo de Gasto')
+
+		
 	
 class inventory(models.Model):
 
@@ -797,7 +806,7 @@ class inventory(models.Model):
 	return_reason = fields.Char(string='Motivo de la Devolucion')
 	receive = fields.Char(string='Quien recibe')
 	folio_ganador = fields.Char(string='Folio consecutivo de ganador')
-	ejecutivo = fields.Many2one('res.partner', string='Ejecutivo Asignado')
+	ejecutivo = fields.Many2one('hr.employee', string='Ejecutivo Asignado')
 	promosion = fields.Char(string='Promocion')
 
 

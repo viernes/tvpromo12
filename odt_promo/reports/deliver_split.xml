@@ -23,18 +23,30 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th t-if="o.origin"><strong>Order</strong></th>
+                                <th t-if="o.origin">
+                                    <strong>Order</strong>
+                                </th>
                                 <th name="td_sched_date_h">
                                     <strong>Date</strong>
                                 </th>
                                 <th t-if="'/OUT/' in o.name">
                                     <strong>Recibe</strong>
                                 </th>
+                                <th t-if="'/OUT/' in o.folio_ganador">
+                                    <strong>Folio Ganador</strong>
+                                </th>
+                                <th t-if="'/OUT/' in o.ejecutivo.name">
+                                    <strong>Ejecutivo</strong>
+                                </th>
+                                <th t-if="'/OUT/' in o.promosion">
+                                    <strong>Promocion</strong>
+                                </th>
                                 <th t-if="'/IN/' in o.name">
                                     <strong>Motivo de la Devolucion</strong>
                                 </th>
                             </tr>
-                        </thead>
+                        </thead>                     
+
                         <tbody>
                             <tr>
                                 <td t-if="o.origin">
@@ -50,6 +62,15 @@
                                 </td>
                                 <td t-if="'/OUT/' in o.name">
                                     <span t-field="o.receive"/>
+                                </td>
+                                <td t-if="'/OUT/' in o.name">
+                                    <span t-field="o.folio_ganador"/>
+                                </td>
+                                <td t-if="'/OUT/' in o.name">
+                                    <span t-field="o.ejecutivo.name"/>
+                                </td>
+                                <td t-if="'/OUT/' in o.name">
+                                    <span t-field="o.promosion"/>
                                 </td>
                                 <td t-if="'/IN/' in o.name">
                                     <span t-field="o.return_reason"/>
