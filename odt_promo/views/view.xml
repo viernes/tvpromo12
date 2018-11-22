@@ -1063,6 +1063,18 @@
               </field>
       </record>
 
+
+      <record id="inherit_field_gasto" model="ir.ui.view">
+              <field name="name">inherit.field.gasto</field>
+              <field name="model">hr.expense</field>
+              <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="tipo_gasto" />
+                </xpath>
+              </field>
+      </record>
+
       <!-- Campos para el stock picking o Inventario -->
 
       <record id="inherit_inventary_field" model="ir.ui.view">
