@@ -1,0 +1,149 @@
+<odoo>
+  <data>
+      <!-- Agrega campo minutos al helpdesk en sla, nota* eliminar los nombres de campos en vista -->
+     
+      <record id="inherit_invisible_field" model="ir.ui.view">
+              <field name="name">inherit.invisible.field</field>
+              <field name="model">helpdesk.sla</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='time_hours']" position="before">
+                 <field name="time_minutes" class="oe_inline"/> minutes<br/> 
+                </xpath>
+              </field>
+      </record>
+     
+<!--       campos de clasificaciones para etiquetas por area -->
+
+      <record id="inherit_clasificacion" model="ir.ui.view">
+              <field name="name">inherit.clasificacion.field</field>
+              <field name="model">helpdesk.ticket</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                 <field name="clasi_mantenimiento" /> 
+                </xpath>
+              </field>
+      </record>
+
+
+      <record id="inherit_clasificacion" model="ir.ui.view">
+              <field name="name">inherit.clasificacion.field</field>
+              <field name="model">helpdesk.ticket</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                 <field name="clasi_mantenimiento" attrs="{'invisible': [('alias_check','!=',1)]}"/>
+                 <field name="clasi_sistemas" attrs="{'invisible': [('alias_check','!=',3)]} "/>
+                 <field name="alias_check" invisible='1'/> 
+                 <field name="others" attrs="{'invisible': [('clasi_mantenimiento','!=',8)]} "/>
+                </xpath>
+              </field>
+      </record>
+
+       <!-- Campo selection para comparar las clasificaciones por area -->
+
+      <record id="inherit_clasificacio_team" model="ir.ui.view">
+              <field name="name">inherit.clasificacion.team</field>
+              <field name="model">helpdesk.team</field>
+              <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                 <field name="class_id" /> 
+                </xpath>
+              </field>
+      </record>
+
+      <!-- Campos flotilla -->
+      <record id="inherit_fields_flotilla" model="ir.ui.view">
+              <field name="name">inherit.fields.flotilla</field>
+              <field name="model">fleet.vehicle</field>
+              <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='residual_value']" position="after">
+                 <field name="date_emision_tc" /> 
+                 <field name="date_vencimiento_tc" />
+                 <field name="date_verificacion" />
+                 <field name="reason" attrs="{'invisible': [('active','=',True)]}"/>
+                 <field name="comments" attrs="{'invisible': [('active','=',True)]}"/>
+                 <field name="next_km"/>
+                 <field name="next_service"/>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                 <field name="compania_seguro" />
+                 <field name="no_poliza"/>
+                 <field name="start_date" />
+                 <field name="end_date" /> 
+                </xpath>
+
+              </field>
+      </record>
+
+      <record id="inherit_fields_flotilla_tree" model="ir.ui.view">
+              <field name="name">inherit.fields.flotilla.tree</field>
+              <field name="model">fleet.vehicle</field>
+              <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                 <field name="no_poliza"/>
+                 <field name="next_km"/>
+                 <field name="next_service"/>
+                </xpath>
+              </field>
+      </record>
+
+<!-- Campos en Modulo Expenses o Gastos -->
+      <record id="inherit_field" model="ir.ui.view">
+              <field name="name">inherit.field</field>
+              <field name="model">hr.expense.sheet</field>
+              <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]/group[1]" position="inside">
+                  <group>
+                    <field name="delivery_amount" />
+                    <field name="prove_amount" />
+                    <field name="returned" />
+                    <field name="diferencia" />
+                  </group>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="approved" />
+                </xpath>
+              </field>
+      </record>
+
+
+      <record id="inherit_field_gasto" model="ir.ui.view">
+              <field name="name">inherit.field.gasto</field>
+              <field name="model">hr.expense</field>
+              <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="tipo_gasto" />
+                </xpath>
+              </field>
+      </record>
+
+      <!-- Campos para el stock picking o Inventario -->
+
+      <record id="inherit_inventary_field" model="ir.ui.view">
+              <field name="name">inherit.inventary.field</field>
+              <field name="model">stock.picking</field>
+              <field name="inherit_id" ref="stock.view_picking_form"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                  <field name="return_reason" attrs="{'invisible': [('scheduled_date','=',False)],'invisible': [('picking_type_code','=','outgoing')]}"/>
+                  <field name="receive" attrs="{'invisible': [('scheduled_date','=',False)], 'invisible': [('picking_type_code','=','incoming')]}"/>
+                  <field name='folio_ganador' attrs="{'invisible': [('picking_type_code','=','incoming')]}"/>
+                  <field name='promosion' attrs="{'invisible': [('picking_type_code','=','incoming')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='location_id']" position="after">
+                    <field name='ejecutivo' attrs="{'invisible': [('picking_type_code','=','incoming')]}"/>
+                </xpath>
+              </field>
+      </record>
+  </data>
+</odoo>
+
+
+
