@@ -44,5 +44,20 @@
                 </xpath>
               </field>
       </record>
+
+      <record id="inherit_view_tree" model="ir.ui.view">
+              <field name="name">inherit.tree.leave.asignations</field>
+              <field name="model">hr.leave.report</field>
+              <field name="inherit_id" ref="hr_holidays.hr_leave_report_tree"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_to']" position="attributes">
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_from']" position="attributes">
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+              </field>
+      </record>
+      
   </data>
 </odoo>
