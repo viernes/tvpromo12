@@ -20,6 +20,7 @@
                     <group>
                         <field name="partner_id"/>
                         <field name="check_in" readonly="1"/>
+                        <field name="location_in"/>
                         <field name="check_out" readonly="1"/>
                         <field name="employee_id"/>
                         <field name="provider_id"/>

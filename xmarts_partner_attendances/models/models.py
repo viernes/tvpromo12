@@ -29,6 +29,7 @@ class PartnerAttendance(models.Model):
     state = fields.Selection([('inside','Entrada'),('outside','Salida')], default='inside')
     partner_id = fields.Many2one('res.partner', string="Partner", required=True, ondelete='cascade', index=True)
     check_in = fields.Datetime(string="Ingreso", default=fields.Datetime.now, required=True)
+    location_in = fields.Char(string='En: ',default=lambda self: self.env.user.street)
     check_out = fields.Datetime(string="Salida")
     employee_id = fields.Many2one("hr.employee", string="¿A quien visita?")
     photo_partner = fields.Binary(string="Foto Contacto")
