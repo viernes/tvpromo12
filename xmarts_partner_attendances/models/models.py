@@ -30,7 +30,7 @@ class PartnerAttendance(models.Model):
     partner_id = fields.Many2one('res.partner', string="Invitado", required=True, ondelete='cascade', index=True)
     check_in = fields.Datetime(string="Ingreso", default=fields.Datetime.now, required=True)
     location_in = fields.Char(string='En: ',default=lambda self: self.env.user.street, readonly=True)
-    location_outt = fields.Char(string='En: ',compute='location_out', readonly=True)
+    location_outt = fields.Char(string='En: ',compute='location_out', readonly=True, store=True)
     check_out = fields.Datetime(string="Salida")
     employee_id = fields.Many2one("hr.employee", string="¿A quien visita?")
     photo_partner = fields.Binary(string="Foto Contacto")
