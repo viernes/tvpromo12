@@ -29,13 +29,14 @@ class RHFields(models.Model):
 					months = diff.months
 					days = diff.days					
 					self.antiquity = '{} Años {} Meses {} Dias'.format(years, months, days)
-				else:
-					if self.date_out and self.date_in: 
-						diff = relativedelta(datetime.datetime(self.date_in), datetime.strptime(str(self.date_out), '%Y-%m-%d'))
-						years = diff.years
-						months = diff.months
-						days = diff.days					
-						self.antiquity = '{} Años {} Meses {} Dias'.format(years, months, days)
+			else:
+				
+				if self.date_out and self.date_in: 
+					diff = relativedelta(datetime.datetime(self.date_in), datetime.strptime(str(self.date_out), '%Y-%m-%d'))
+					years = diff.years
+					months = diff.months
+					days = diff.days					
+					self.antiquity = '{} Años {} Meses {} Dias'.format(years, months, days)
 
 #Revisar la funcion if de por que no funciona o manda la fecha cuando esta active false
 
@@ -88,48 +89,4 @@ class leaveasignations(models.Model):
 				self.vencimiento = fields.Date.from_string(self.comple_laboral) + relativedelta(months=self.validity)
 
 
-
-    # @api.onchange('number_of_days')
-    # def number_of_days_change(self):
-    #     if self.number_of_days:
-    #         if self.start_date:
-    #             end_date_dt = fields.Date.from_string(self.start_date) + relativedelta(days=self.number_of_days - 1)
-    #             end_date = fields.Date.to_string(end_date_dt)
-    #             if self.end_date != end_date:
-    #                 self.end_date = end_date
-    #         elif self.end_date:
-    #             self.start_date = fields.Date.from_string(self.end_date) -\
-    #                 relativedelta(days=self.number_of_days - 1)
-
-
-
-	# @api.onchange('antiquity')
-	# def _onchange_days(self):
-	# 	if self.antiquity:
-	# 		self.holiday_status_id = self.search([('holiday_status_id.antiquity_years', '=', self.antiquity)], limit=1)
-
-	# @api.onchange('antiquity','antiquity_years_allocation')
-	# def _onchange_days(self):
-	# 	if self.antiquity:
-	# 		self.holiday_status_id = self.env['hr.leave.allocation'].search([('antiquity_years_allocation', '=', self.antiquity)], limit=1)
-
-
-    # def calculate_age(birth_date):
-    #     today = date.today()
-    #     age = today.year - birth_date.year
-    #     full_year_passed = (today.month, today.day) < (birth_date.month, birth_date.day)
-    #     if not full_year_passed:
-    #         age -= 1
-    #     return age>>> from datetime import date
-
-
-# >>> current_date=date.today()
-# >>> carry, new_month=divmod(current_date.month-1+1, 12)
-# >>> new_month+=1
-# >>> current_date=current_date.replace(year=current_date.year+carry, month=new_month)
-# >>> print date.today()
-# 2011-05-21
-# >>> print current_date
-# 2011-06-21
-# >>>
 

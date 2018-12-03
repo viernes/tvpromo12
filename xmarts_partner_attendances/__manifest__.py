@@ -29,7 +29,10 @@
         'views/templates.xml',
     ],
     # only loaded in demonstration mode
-    'demo': [
+     'demo': [
         'demo/demo.xml',
     ],
+    'qweb': [
+        "static/src/xml/attendance.xml", ],
+   
 }
