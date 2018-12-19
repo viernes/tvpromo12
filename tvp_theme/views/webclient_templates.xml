@@ -1,0 +1,7 @@
+<odoo>
+    <template id="assets_backend" name="web_enterprise assets backend" inherit_id="web.assets_backend">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/web_enterprise/static/src/scss/home_menu.scss"/>
+        </xpath>
+    </template>
+</odoo>
