@@ -1,4 +1,3 @@
-
 {
     "name": "GTVP Theme",
     "summary": "Odoo 12.0 Enterprise backend theme",
@@ -16,10 +15,17 @@
         'views/webclient_templates.xml',
     ],
     "qweb": [
-        'views/base.xml',
+        "views/base.xml",
 
-],
+    ],
+    "images": [
+
+    ],
+    "external_dependencies": {
+
+    },
     "application": False,
     "installable": True,
     "auto_install": True,
+    "sequence": "999",
 }
