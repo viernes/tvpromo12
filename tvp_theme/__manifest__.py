@@ -16,16 +16,10 @@
         'views/webclient_templates.xml',
     ],
     "qweb": [
-        "views/base.xml",
+        'views/base.xml',
 
-    ],
-    "images": [
-
-    ],
-    "external_dependencies": {
-
-    },
+],
     "application": False,
     "installable": True,
-    "auto_install": False,
+    "auto_install": True,
 }
