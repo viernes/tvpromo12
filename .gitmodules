@@ -1,3 +1,6 @@
 [submodule "customer_supplier"]
 	path = customer_supplier
 	url = git@github.com:viernes/customer_supplier.git
+[submodule "doble_approval"]
+	path = doble_approval
+	url = git@github.com:viernes/doble_approval.git
