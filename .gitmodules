@@ -4,3 +4,8 @@
 [submodule "doble_approval"]
 	path = doble_approval
 	url = git@github.com:viernes/doble_approval.git
+
+[submodule "JayVora-SerpentCS/MassEditing"]
+	path = JayVora-SerpentCS/MassEditing
+	url = git@github.com:JayVora-SerpentCS/MassEditing.git
+	branch = 12.0
