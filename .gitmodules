@@ -12,3 +12,6 @@
 [submodule "purchase_tripple"]
 	path = purchase_tripple
 	url = git@github.com:viernes/purchase_tripple.git
+[submodule "odoo_hr_expense_approval"]
+	path = odoo_hr_expense_approval
+	url = git@github.com:viernes/odoo_hr_expense_approval.git
