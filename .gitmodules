@@ -15,3 +15,6 @@
 [submodule "odoo_hr_expense_approval"]
 	path = odoo_hr_expense_approval
 	url = git@github.com:viernes/odoo_hr_expense_approval.git
+[submodule "seguros_gasolina"]
+	path = seguros_gasolina
+	url = git@github.com:William954/seguros_gasolina.git
