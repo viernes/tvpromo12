@@ -21,3 +21,6 @@
 [submodule "w_custom_hr_holidays"]
 	path = w_custom_hr_holidays
 	url = git@github.com:William954/w_custom_hr_holidays.git
+[submodule "w_custom_helpdesk_and_profiles"]
+	path = w_custom_helpdesk_and_profiles
+	url = git@github.com:William954/w_custom_helpdesk_and_profiles.git
