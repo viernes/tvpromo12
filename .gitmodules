@@ -18,3 +18,6 @@
 [submodule "seguros_gasolina"]
 	path = seguros_gasolina
 	url = git@github.com:William954/seguros_gasolina.git
+[submodule "w_custom_hr_holidays"]
+	path = w_custom_hr_holidays
+	url = git@github.com:William954/w_custom_hr_holidays.git
