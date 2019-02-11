@@ -29,3 +29,6 @@
 	path = William954/tvp_sdp
 	url = git@github.com:William954/tvp_sdp.git
 	branch = master
+[submodule "ODTs"]
+	path = ODTs
+	url = git@github.com:William954/ODTs.git
