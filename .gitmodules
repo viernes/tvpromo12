@@ -24,3 +24,8 @@
 [submodule "w_custom_helpdesk_and_profiles"]
 	path = w_custom_helpdesk_and_profiles
 	url = git@github.com:William954/w_custom_helpdesk_and_profiles.git
+
+[submodule "William954/tvp_sdp"]
+	path = William954/tvp_sdp
+	url = git@github.com:William954/tvp_sdp.git
+	branch = master
