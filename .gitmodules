@@ -28,3 +28,6 @@
 [submodule "tvp_sdp"]
 	path = tvp_sdp
 	url = git@github.com:William954/tvp_sdp.git
+[submodule "purchase_tripple"]
+	path = purchase_tripple
+	url = git@github.com:viernes/purchase_tripple.git
