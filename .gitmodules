@@ -31,3 +31,6 @@
 [submodule "purchase_tripple"]
 	path = purchase_tripple
 	url = git@github.com:viernes/purchase_tripple.git
+[submodule "rh_tvp"]
+	path = rh_tvp
+	url = https://github.com/William954/rh_tvp.git
