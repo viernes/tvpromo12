@@ -34,3 +34,8 @@
 [submodule "ODTs"]
 	path = ODTs
 	url = git@github.com:William954/ODTs.git
+
+[submodule "xmarts/validate_withtout_followers"]
+	path = xmarts/validate_withtout_followers
+	url = git@github.com:xmarts/validate_withtout_followers.git
+	branch = master
