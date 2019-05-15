@@ -39,3 +39,6 @@
 	path = xmarts/validate_withtout_followers
 	url = git@github.com:xmarts/validate_withtout_followers.git
 	branch = master
+[submodule "issue_attendance"]
+	path = issue_attendance
+	url = git@github.com:William954/issue_attendance.git
