@@ -42,3 +42,6 @@
 [submodule "issue_attendance"]
 	path = issue_attendance
 	url = git@github.com:William954/issue_attendance.git
+[submodule "admin_export"]
+	path = admin_export
+	url = git@github.com:William954/admin_export.git
