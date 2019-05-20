@@ -45,3 +45,6 @@
 [submodule "admin_export"]
 	path = admin_export
 	url = git@github.com:William954/admin_export.git
+[submodule "Issues_in_budget"]
+	path = Issues_in_budget
+	url = git@github.com:William954/Issues_in_budget.git
