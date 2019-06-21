@@ -48,3 +48,6 @@
 [submodule "Issues_in_budget"]
 	path = Issues_in_budget
 	url = git@github.com:William954/Issues_in_budget.git
+[submodule "editable_expenses"]
+	path = editable_expenses
+	url = git@github.com:xmarts/editable_expenses.git
