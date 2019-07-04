@@ -51,6 +51,3 @@
 [submodule "editable_expenses"]
 	path = editable_expenses
 	url = git@github.com:xmarts/editable_expenses.git
-[submodule "ninja_dashboard"]
-	path = ninja_dashboard
-	url = git@github.com:viernes/ninja_dashboard.git
