@@ -54,3 +54,8 @@
 [submodule "ninja_dashboard"]
 	path = ninja_dashboard
 	url = git@github.com:viernes/ninja_dashboard.git
+
+[submodule "xmarts/module_xmarts_budget"]
+	path = xmarts/module_xmarts_budget
+	url = git@github.com:xmarts/module_xmarts_budget.git
+	branch = master
