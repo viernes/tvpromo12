@@ -1,0 +1,24 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherited odt-diseño form view -->
+    <record id="view_odt_form" model="ir.ui.view">
+        <field name="name">view.odt.form</field>
+        <field name="model">odt.diseno</field>
+        <field name="inherit_id" ref="odt_tvp_v2.form_diseno_odt"/>
+        <field name="arch" type="xml">
+            <field name="d_otro" position="after">
+                <field name="cont_presentacion" invisible="1"/>
+                <field name="cont_template" invisible="1"/>
+                <field name="cont_graph" invisible="1"/>
+                <field name="cont_pop" invisible="1"/>
+                <field name="cont_ohoo" invisible="1"/>
+                <field name="cont_logotipo" invisible="1"/>
+                <field name="cont_visualizacion" invisible="1"/>
+                <field name="cont_digital" invisible="1"/>
+                <field name="cont_otro" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
