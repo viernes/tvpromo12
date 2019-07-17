@@ -35,9 +35,9 @@ class OdtDiseno(models.Model):
 		else:
 			self.cont_pop = 0
 
-	@api.onchange('d_ohoo')
-	def _onchange_d_ohoo(self):
-		if self.d_ohoo == True:
+	@api.onchange('d_adaptacion_ooh')
+	def _onchange_d_adaptacion_ooh(self):
+		if self.d_adaptacion_ooh == True:
 			self.cont_ohoo = 1
 		else:
 			self.cont_ohoo = 0
