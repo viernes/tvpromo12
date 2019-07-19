@@ -31,10 +31,6 @@
 [submodule "rh_tvp"]
 	path = rh_tvp
 	url = https://github.com/William954/rh_tvp.git
-[submodule "ODTs"]
-	path = ODTs
-	url = git@github.com:William954/ODTs.git
-
 [submodule "xmarts/validate_withtout_followers"]
 	path = xmarts/validate_withtout_followers
 	url = git@github.com:xmarts/validate_withtout_followers.git
