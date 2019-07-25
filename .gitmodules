@@ -58,3 +58,8 @@
 [submodule "ODTs"]
 	path = ODTs
 	url = git@github.com:William954/ODTs.git
+
+[submodule "xmarts/xmarts_calculo_sdp"]
+	path = xmarts/xmarts_calculo_sdp
+	url = git@github.com:xmarts/xmarts_calculo_sdp.git
+	branch = master
